@@ -1,0 +1,11 @@
+{
+  "name": "ticket-audit",
+  "description": "Claude Code skills for auditing Jira ticket implementation against frontend (Next.js) and backend (Rails) codebases. Identifies gaps, checks ticket quality, and integrates with Tambora QA.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Rhonalf Martinez",
+    "email": "rhonalf.martinez@koombea.com"
+  },
+  "homepage": "https://github.com/rhonaldomaster/claude-skills/tree/main/ticket-audit",
+  "license": "MIT"
+}
