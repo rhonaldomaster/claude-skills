@@ -1,8 +1,14 @@
 ---
 name: review-ticket-backend-rails
-description: Review a Jira ticket against the codebase. Fetches the ticket, audits existing backend code, identifies what is already implemented, flags gaps, and checks for missing details in the ticket description. Optionally checks Tambora test cases for a given suite name.
+description: |
+  Fire when reviewing a Jira ticket for backend Rails readiness or implementation status against the current codebase.
+
+  Use this skill to fetch the ticket, audit existing backend code, identify what is already implemented, flag gaps, and check for missing details in the ticket description. Optionally check Tambora test cases for a given suite name.
+
+  Invoke explicitly with a Jira ticket ID, optionally followed by a Tambora suite name and `--qa` for QA mode.
 user-invocable: true
 argument-hint: '[ticket-id] [tambora-suite-name?] [--qa?]'
+allowed-tools: Bash, Read, Glob, Grep, Agent
 ---
 
 # Review Ticket
@@ -18,7 +24,7 @@ You are performing a **ticket readiness analysis** for the Jira ticket ID extrac
 
 > **Mode detection:** Check for `--qa` in the arguments first.
 > - **Normal mode** (no `--qa`): run Steps 1–7.
-> - **QA mode** (`--qa` present): run Steps 1, 2a, 6, 7, and 8. Skip Steps 2b–5 (deep audit, gap analysis, ticket quality check) — those are for the backend team only.
+> - **QA mode** (`--qa` present): run Steps 1, 2a, and 8. Skip Steps 2b–7 (deep audit, gap analysis, ticket quality check, and other normal-mode-only review steps) — those are for the backend team only.
 
 ### 1. Fetch Ticket Details
 

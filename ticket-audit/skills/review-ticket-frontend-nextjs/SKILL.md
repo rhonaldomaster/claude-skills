@@ -1,8 +1,16 @@
 ---
 name: review-ticket-frontend-nextjs
-description: Review a Jira ticket against the frontend codebase. Fetches the ticket, audits existing Next.js/React implementation, identifies what is already built, flags gaps, and checks for missing details in the ticket description. Optionally checks Tambora test cases for a given suite name.
+description: |
+  Fire when the user wants to review a Jira ticket against the frontend codebase, check whether a Next.js/React feature is already implemented, identify implementation gaps, assess ticket readiness, or validate frontend QA/test coverage for a ticket.
+
+  Invoke with a Jira ticket ID, optionally followed by a Tambora suite name and `--qa` for QA mode.
+  Example invocations:
+  - `review-ticket-frontend-nextjs MPP-221`
+  - `review-ticket-frontend-nextjs MPP-221 "MPP-150 Memories list view"`
+  - `review-ticket-frontend-nextjs MPP-221 --qa`
 user-invocable: true
 argument-hint: '[ticket-id] [tambora-suite-name?] [--qa?]'
+allowed-tools: Bash, Read, Glob, Grep, Agent
 ---
 
 # Review Ticket (Frontend)
@@ -20,7 +28,7 @@ The target codebase is the **MyParkPlanner frontend**: Next.js 16, React 19, Typ
 
 > **Mode detection:** Check for `--qa` in the arguments first.
 > - **Normal mode** (no `--qa`): run Steps 1–7.
-> - **QA mode** (`--qa` present): run Steps 1, 2a, 6, 7, and 8. Skip Steps 2b–5 (deep audit, gap analysis, ticket quality check) — those are for the frontend developer only.
+> - **QA mode** (`--qa` present): run Steps 1, 2a, and 8. Skip Steps 2b–7 (deep audit, gap analysis, ticket quality check, and other normal-mode-only review steps) — those are for the frontend developer only.
 
 ### 1. Fetch Ticket Details
 
