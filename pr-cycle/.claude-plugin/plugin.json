@@ -1,0 +1,7 @@
+{
+  "name": "pr-cycle",
+  "version": "1.0.0",
+  "description": "Full PR cycle review skills for multiple stacks: code quality + Jira AC coverage + inline GitHub comments + optional Tambora QA integration",
+  "author": { "name": "Rhonalf Martinez" },
+  "skills": "./skills/"
+}

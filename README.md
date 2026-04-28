@@ -21,6 +21,7 @@ Collection of Claude Code skills for development workflows.
 | Plugin | Description |
 |--------|-------------|
 | [ticket-audit](./ticket-audit/) | Claude Code plugin bundling `review-ticket-frontend-nextjs` and `review-ticket-backend-rails` with optional Tambora QA integration |
+| [pr-cycle](./pr-cycle/) | Claude Code plugin for full PR cycle reviews across 5 stacks (Next.js, Rails, Yii2, WordPress, Shopify): code quality + Jira AC coverage + Tambora |
 
 ## Installation
 
