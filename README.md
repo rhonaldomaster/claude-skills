@@ -13,6 +13,8 @@ Collection of Claude Code skills for development workflows.
 | [frontend-quality-rules](./frontend-quality-rules/) | `/frontend-quality-rules` | Frontend code quality rules for writing and reviewing React/JSX code |
 | [review-ticket-frontend-nextjs](./review-ticket-frontend-nextjs/) | `/review-ticket-frontend-nextjs` | Audit a Jira ticket against a Next.js/React frontend codebase |
 | [review-ticket-backend-rails](./review-ticket-backend-rails/) | `/review-ticket-backend-rails` | Audit a Jira ticket against a Rails backend codebase |
+| [frontend-nextjs-pr-cycle](./frontend-nextjs-pr-cycle/) | `/frontend-nextjs-pr-cycle` | Full PR cycle review for Next.js/React PRs: code quality + Jira AC coverage + optional Tambora QA integration |
+| [backend-rails-pr-cycle](./backend-rails-pr-cycle/) | `/backend-rails-pr-cycle` | Full PR cycle review for Ruby on Rails PRs: code quality + Jira AC coverage + optional Tambora QA integration |
 
 ## Plugin
 
