@@ -9,6 +9,8 @@ description: |
 user-invocable: true
 argument-hint: '[ticket-id] [tambora-suite-name?] [--qa?]'
 allowed-tools: Bash, Read, Glob, Grep, Agent
+model: best
+effort: high
 ---
 
 # Review Ticket
