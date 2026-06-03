@@ -6,7 +6,7 @@ arguments:
     description: "Jira ticket key (e.g., 'PST-154'). Must include the project prefix."
     required: true
 model: best
-effort: high
+effort: xhigh
 ---
 
 # Refine Ticket

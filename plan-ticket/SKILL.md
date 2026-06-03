@@ -6,7 +6,7 @@ arguments:
     description: "Jira ticket key (e.g., 'MPP-650'). Must include the project prefix."
     required: true
 model: best
-effort: high
+effort: xhigh
 ---
 
 # Plan Ticket
