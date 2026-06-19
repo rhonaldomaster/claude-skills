@@ -24,6 +24,8 @@ Parse `$ARGUMENTS` as follows:
 
 Set `COMMENT_LANGUAGE=es` for Spanish comments or `COMMENT_LANGUAGE=en` for English (default: `en`).
 
+**Ticket ID auto-inference:** If no Jira ticket ID was provided in `$ARGUMENTS`, fetch the PR title and extract the ticket ID from it using the pattern `\[([A-Z]+-\d+)\]`. Example: a PR titled `[MPP-221] Add payment flow` → infer `TICKET_ID=MPP-221`. Only use the inferred ID if no explicit one was provided.
+
 ---
 
 ## Step 0: Setup
@@ -41,6 +43,8 @@ Fetch the PR metadata:
 ```bash
 gh pr view $PR_NUMBER --json title,body,commits,author,reviewDecision,reviews,comments
 ```
+
+**If `TICKET_ID` was not set from `$ARGUMENTS`**, extract it from the PR title using `\[([A-Z]+-\d+)\]`. If a match is found, set `TICKET_ID` to the captured group. If not found, leave `TICKET_ID` unset and proceed with code-only review.
 
 Check for **existing review comments** (from Copilot, other reviewers, bots) so we don't duplicate issues already reported:
 
