@@ -359,64 +359,57 @@ Flag any AC that is **not implemented** or only **partially implemented** — no
 
 ---
 
-## Step 5: Leave Inline Comments
+## Step 5 & 6: Unified Review — Inline Comments + Summary in One Request
 
-For each violation found (skipping any already reported by other reviewers):
+All inline comments and the summary body must be submitted as a **single review** in one API call. GitHub rejects `event="PENDING"` on the creation endpoint, so do NOT use the two-step create-then-submit approach. Instead, pass the `comments` array and `event` together in the initial POST.
 
-**Single-line comment (preferred for focused issues):**
+Build the JSON payload, then submit it:
+
 ```bash
-gh api repos/$REPO_OWNER/$REPO_NAME/pulls/$PR_NUMBER/comments \
-  -f body="COMMENT_TEXT" \
-  -f commit_id="$COMMIT_SHA" \
-  -f path="FILE_PATH" \
-  -F line=EXACT_LINE_NUMBER \
-  -f side="RIGHT"
+gh api repos/$REPO_OWNER/$REPO_NAME/pulls/$PR_NUMBER/reviews \
+  --method POST \
+  --input - <<EOF
+{
+  "commit_id": "$COMMIT_SHA",
+  "event": "REQUEST_CHANGES",
+  "body": "SUMMARY_BODY",
+  "comments": [
+    {
+      "path": "FILE_PATH",
+      "line": EXACT_LINE_NUMBER,
+      "side": "RIGHT",
+      "body": "COMMENT_TEXT"
+    }
+  ]
+}
+EOF
 ```
 
-**Multi-line comment (when the problem spans several lines):**
-```bash
-gh api repos/$REPO_OWNER/$REPO_NAME/pulls/$PR_NUMBER/comments \
-  -f body="COMMENT_TEXT" \
-  -f commit_id="$COMMIT_SHA" \
-  -f path="FILE_PATH" \
-  -F start_line=START_LINE_NUMBER \
-  -F line=END_LINE_NUMBER \
-  -f side="RIGHT"
+For **multi-line comments** (problem spans several lines), add `start_line` and `start_side`:
+
+```json
+{
+  "path": "FILE_PATH",
+  "start_line": START_LINE_NUMBER,
+  "start_side": "RIGHT",
+  "line": END_LINE_NUMBER,
+  "side": "RIGHT",
+  "body": "COMMENT_TEXT"
+}
 ```
 
 **Notes:**
-- `line` = exact file line number in the new version of the file (right side of diff)
+- `line` = exact file line number in the new version (right side of diff)
 - `side` = `"RIGHT"` for additions/modifications, `"LEFT"` for deletions
 - Use ` ```suggestion ` blocks for single-line fixes (enables one-click apply in GitHub UI)
 - Use ` ```php ` blocks for multi-line PHP suggestions
+- If there are **no inline comments**, omit the `"comments"` key entirely (empty array is also valid)
 
----
-
-## Step 6: Summary Review Comment
-
-After all inline comments, post a summary review.
-
-If there are violations:
-
-**COMMENT_LANGUAGE=en:**
-```bash
-gh pr review $PR_NUMBER --request-changes --body "Review completed: [X] comments left in the code
-
-**Summary:**
-- [Brief list of issue categories found]
-
-**Acceptance criteria coverage:**
-- [AC status summary if Jira ticket was provided]
-
-**Positive observations:**
-- [Things done well]
-
-_Lead review bot_"
-```
+### Summary body — violations found
 
 **COMMENT_LANGUAGE=es:**
-```bash
-gh pr review $PR_NUMBER --request-changes --body "Revision completada: [X] comentarios dejados en el codigo
+```
+Revision completada: [X] comentarios dejados en el codigo
 
 **Resumen:**
 - [Breve lista de categorias de issues encontrados]
@@ -427,27 +420,45 @@ gh pr review $PR_NUMBER --request-changes --body "Revision completada: [X] comen
 **Observaciones positivas:**
 - [Cosas bien hechas]
 
-_Lead review bot_"
+_Lead review bot_
 ```
-
-If there are **no violations** and all ACs are covered:
 
 **COMMENT_LANGUAGE=en:**
-```bash
-gh pr review $PR_NUMBER --approve --body "Everything looks good! Clean Yii2 code following project standards.
+```
+Review completed: [X] comments left in the code
 
-**Acceptance criteria:** All criteria from $TICKET_ID are addressed in this PR.
+**Summary:**
+- [Brief list of issue categories found]
 
-_Lead review bot_"
+**Acceptance criteria coverage:**
+- [AC status summary if Jira ticket was provided]
+
+**Positive observations:**
+- [Things done well]
+
+_Lead review bot_
 ```
 
+### Summary body — no violations (approve)
+
+Use `"event": "APPROVE"` in the payload instead of `"REQUEST_CHANGES"`.
+
 **COMMENT_LANGUAGE=es:**
-```bash
-gh pr review $PR_NUMBER --approve --body "Todo se ve bien! Codigo Yii2 limpio y siguiendo los estandares del proyecto.
+```
+Todo se ve bien! Codigo Yii2 limpio y siguiendo los estandares del proyecto.
 
 **Criterios de aceptacion:** Todos los criterios de $TICKET_ID estan cubiertos en este PR.
 
-_Lead review bot_"
+_Lead review bot_
+```
+
+**COMMENT_LANGUAGE=en:**
+```
+Everything looks good! Clean Yii2 code following project standards.
+
+**Acceptance criteria:** All criteria from $TICKET_ID are addressed in this PR.
+
+_Lead review bot_
 ```
 
 ---
