@@ -1,14 +1,14 @@
 ---
-name: watch
+name: pr-cycle-watch
 description: |
   Watch a specific PR for new commits and trigger a pr-cycle review automatically.
   Designed to be used with /loop for polling during a session.
 
   Invoke with a PR number (required), optional stack, and optional Jira ticket ID.
   Examples:
-  - `watch 42`
-  - `watch 42 backend-yii2`
-  - `watch 42 backend-yii2 MPP-221`
+  - `pr-cycle-watch 42`
+  - `pr-cycle-watch 42 backend-yii2`
+  - `pr-cycle-watch 42 backend-yii2 MPP-221`
 
 user-invocable: true
 argument-hint: '<PR_NUMBER> [STACK?] [JIRA_TICKET_ID?]'
