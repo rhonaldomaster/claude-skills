@@ -88,6 +88,10 @@ If `LAST_SHA == CURRENT_SHA`:
 
 If `LAST_SHA != CURRENT_SHA`:
 - Report: "PR #$PR_NUMBER — new commits detected (${LAST_SHA:0:8} → ${CURRENT_SHA:0:8}). Triggering review..."
+- Run:
+```bash
+osascript -e "display notification \"New commits on PR #$PR_NUMBER — triggering review...\" with title \"PR Watcher\" sound name \"Glass\""
+```
 
 ---
 
@@ -115,4 +119,8 @@ UPDATED=$(jq --arg key "$STATE_KEY" --arg sha "$CURRENT_SHA" \
 echo "$UPDATED" > "$STATE_FILE"
 ```
 
-Report: "Review complete for PR #$PR_NUMBER. State updated to SHA ${CURRENT_SHA:0:8}."
+- Run:
+```bash
+osascript -e "display notification \"Review complete for PR #$PR_NUMBER (${CURRENT_SHA:0:8})\" with title \"PR Watcher\" sound name \"Glass\""
+```
+- Report: "Review complete for PR #$PR_NUMBER. State updated to SHA ${CURRENT_SHA:0:8}."
