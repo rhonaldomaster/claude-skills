@@ -1,5 +1,5 @@
 ---
-name: pr-cycle-watch
+name: watch
 description: |
   Watch a specific PR for new commits and trigger a pr-cycle review automatically.
   Designed to be used with /loop for polling during a session.
