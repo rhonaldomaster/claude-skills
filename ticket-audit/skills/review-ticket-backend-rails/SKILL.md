@@ -8,7 +8,7 @@ description: |
   Invoke explicitly with a Jira ticket ID, optionally followed by a Tambora suite name and `--qa` for QA mode.
 user-invocable: true
 argument-hint: '[ticket-id] [tambora-suite-name?] [--qa?]'
-model: best
+model: opus
 effort: xhigh
 allowed-tools: Bash, Read, Glob, Grep, Agent
 ---

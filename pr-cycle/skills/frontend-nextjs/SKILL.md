@@ -11,7 +11,7 @@ description: |
 user-invocable: true
 argument-hint: '<PR_NUMBER> [JIRA_TICKET_ID?] [tambora-suite-name?]'
 allowed-tools: Bash, Read, Glob, Grep, Agent
-model: best
+model: opus
 effort: xhigh
 ---
 
