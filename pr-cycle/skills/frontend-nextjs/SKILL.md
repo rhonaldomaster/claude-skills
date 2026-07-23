@@ -1,5 +1,5 @@
 ---
-name: frontend-nextjs-pr-cycle
+name: frontend-nextjs
 description: |
   Full PR cycle review for Next.js/React frontend PRs. Reviews code quality against team lead standards AND cross-references the linked Jira ticket's acceptance criteria. Leaves inline GitHub comments and optionally moves the Jira ticket to QA when the PR is approved.
 
@@ -435,7 +435,7 @@ Use `"event": "APPROVE"` in the payload instead of `"REQUEST_CHANGES"`.
 
 **COMMENT_LANGUAGE=en:**
 ```
-Everything looks good! Clean code following project standards.
+No violations found. Code follows project standards.
 
 **Acceptance criteria:** All criteria from $TICKET_ID are addressed in this PR.
 
@@ -444,7 +444,7 @@ _Lead review bot_
 
 **COMMENT_LANGUAGE=es:**
 ```
-Todo se ve bien! Codigo limpio y siguiendo los estandares del proyecto.
+Sin violaciones. El codigo sigue los estandares del proyecto.
 
 **Criterios de aceptacion:** Todos los criterios de $TICKET_ID estan cubiertos en este PR.
 
