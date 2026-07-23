@@ -11,10 +11,6 @@ Collection of Claude Code skills for development workflows.
 | [lead-review](./lead-review/) | `/lead-review` | Frontend PR code review using team lead's architectural opinions and code standards |
 | [rails-lead-review](./rails-lead-review/) | `/rails-lead-review` | Rails PR code review using team lead's architectural opinions and Rails best practices |
 | [frontend-quality-rules](./frontend-quality-rules/) | `/frontend-quality-rules` | Frontend code quality rules for writing and reviewing React/JSX code |
-| [review-ticket-frontend-nextjs](./review-ticket-frontend-nextjs/) | `/review-ticket-frontend-nextjs` | Audit a Jira ticket against a Next.js/React frontend codebase |
-| [review-ticket-backend-rails](./review-ticket-backend-rails/) | `/review-ticket-backend-rails` | Audit a Jira ticket against a Rails backend codebase |
-| [frontend-nextjs-pr-cycle](./frontend-nextjs-pr-cycle/) | `/frontend-nextjs-pr-cycle` | Full PR cycle review for Next.js/React PRs: code quality + Jira AC coverage + optional Tambora QA integration |
-| [backend-rails-pr-cycle](./backend-rails-pr-cycle/) | `/backend-rails-pr-cycle` | Full PR cycle review for Ruby on Rails PRs: code quality + Jira AC coverage + optional Tambora QA integration |
 | [refine-ticket](./refine-ticket/) | `/refine-ticket` | Read a Jira ticket and suggest edits to improve its quality |
 
 ## Plugin
