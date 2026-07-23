@@ -352,14 +352,14 @@ _Lead review bot_"
 
 **If COMMENT_LANGUAGE=en:**
 ```bash
-gh pr review $PR_NUMBER --approve --body "Everything looks good! Clean Rails code following project standards.
+gh pr review $PR_NUMBER --approve --body "No violations found. Rails code follows project standards.
 
 _Lead review bot_"
 ```
 
 **If COMMENT_LANGUAGE=es:**
 ```bash
-gh pr review $PR_NUMBER --approve --body "Todo se ve bien! Codigo Rails limpio y siguiendo los estandares del proyecto.
+gh pr review $PR_NUMBER --approve --body "Sin violaciones. El codigo Rails sigue los estandares del proyecto.
 
 _Lead review bot_"
 ```

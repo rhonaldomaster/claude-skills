@@ -466,7 +466,7 @@ Use `"event": "APPROVE"` in the payload instead of `"REQUEST_CHANGES"`.
 
 **COMMENT_LANGUAGE=en:**
 ```
-Everything looks good! Clean WordPress code following project standards.
+No violations found. WordPress code follows project standards.
 
 **Acceptance criteria:** All criteria from $TICKET_ID are addressed in this PR.
 
@@ -475,7 +475,7 @@ _Lead review bot_
 
 **COMMENT_LANGUAGE=es:**
 ```
-Todo se ve bien! Codigo WordPress limpio y siguiendo los estandares del proyecto.
+Sin violaciones. El codigo WordPress sigue los estandares del proyecto.
 
 **Criterios de aceptacion:** Todos los criterios de $TICKET_ID estan cubiertos en este PR.
 
