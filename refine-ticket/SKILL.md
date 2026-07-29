@@ -1,6 +1,6 @@
 ---
 name: refine-ticket
-description: Analyze a Jira ticket and suggest improvements for clarity — adds motivation, scope, and acceptance criteria. Use when the user wants to improve a ticket, says "refine ticket", or asks to make a ticket clearer.
+description: Analyze a Jira ticket and suggest improvements for clarity, adding motivation, scope, and acceptance criteria. Use when the user wants to improve a ticket, says "refine ticket", or asks to make a ticket clearer.
 arguments:
   - name: TICKET_ID
     description: "Jira ticket key (e.g., 'PST-154'). Must include the project prefix."
@@ -33,8 +33,8 @@ Extract:
 
 Read the following files if they exist in the current working directory (in parallel):
 
-1. `CLAUDE.md` — stack, architecture, module list, conventions
-2. `PATTERNS.md` — recurring implementation patterns specific to this project
+1. `CLAUDE.md` (stack, architecture, module list, conventions)
+2. `PATTERNS.md` (recurring implementation patterns specific to this project)
 
 Use this context to:
 - Understand which modules or layers the ticket touches
@@ -59,14 +59,14 @@ Write the improved description in **English** using this structure:
 
 ```
 **Motivation:**
-<Why this change is needed — deprecation notice, bug, compliance, performance, etc.>
+<Why this change is needed (deprecation notice, bug, compliance, performance, etc.)>
 
 **Scope:**
 - <File or component 1>: <what changes>
 - <File or component 2>: <what changes>
 - <Config file if applicable>: <what changes>
 
-**<Named list if applicable — e.g., Accounts to verify, Endpoints to test>:**
+**<Named list if applicable (e.g. Accounts to verify, Endpoints to test)>:**
 - item 1
 - item 2
 
@@ -78,9 +78,9 @@ Write the improved description in **English** using this structure:
 
 Rules for the draft:
 - Use plain English, no jargon unless it matches the project stack
-- Acceptance criteria must be testable — avoid "works correctly", prefer "returns HTTP 200" or "no errors in logs"
+- Acceptance criteria must be testable, avoid "works correctly", prefer "returns HTTP 200" or "no errors in logs"
 - Reference actual file paths from the project when known (use CLAUDE.md context)
-- Keep it concise — clarity over completeness
+- Keep it concise, clarity over completeness
 
 ## Step 5: Present & Confirm
 
@@ -94,8 +94,12 @@ Do NOT update Jira until the user explicitly confirms.
 
 ## Step 6: Update Jira (only after confirmation)
 
+`jira issue edit` does not support `--template` for a multi-line body. Write the improved description to a temp file first, then pipe it via stdin:
+
 ```bash
-jira issue edit <TICKET_ID> -b "<improved description>" --no-input
+cat <<'EOF' | jira issue edit <TICKET_ID> --no-input
+<improved description>
+EOF
 ```
 
 Confirm success and show the Jira URL.
@@ -106,4 +110,5 @@ Confirm success and show the Jira URL.
 - Never update Jira without explicit user confirmation
 - Do not modify the ticket summary unless the user asks
 - Do not add labels, assignees, or priority changes unless asked
-- If the ticket already has good motivation and ACs, say so — don't pad it unnecessarily
+- If the ticket already has good motivation and ACs, say so, don't pad it unnecessarily
+- Preserve all existing reference links and external URLs from the original description in the improved version

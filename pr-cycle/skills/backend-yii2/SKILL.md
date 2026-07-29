@@ -147,8 +147,8 @@ $users = Yii::$app->db->createCommand('SELECT * FROM user WHERE name = :name', [
 $users = User::find()->where(['name' => $name])->all();
 ```
 
-- **en:** "SQL injection risk — use parameterized query or ActiveRecord instead of string interpolation"
-- **es:** "Riesgo de SQL injection — usar query parametrizada o ActiveRecord en vez de interpolación de string"
+- **en:** "SQL injection risk, use parameterized query or ActiveRecord instead of string interpolation"
+- **es:** "Riesgo de SQL injection, usar query parametrizada o ActiveRecord en vez de interpolación de string"
 
 #### Rule 2 — XSS via Unescaped Output
 - Flag output that renders user-controlled data without escaping in views.
@@ -162,8 +162,8 @@ $users = User::find()->where(['name' => $name])->all();
 <?= Html::encode($model->comment) ?>
 ```
 
-- **en:** "XSS risk — escape user-controlled output with `Html::encode()`"
-- **es:** "Riesgo de XSS — escapar salida controlada por el usuario con `Html::encode()`"
+- **en:** "XSS risk, escape user-controlled output with `Html::encode()`"
+- **es:** "Riesgo de XSS, escapar salida controlada por el usuario con `Html::encode()`"
 
 #### Rule 3 — Missing Input Validation (No `rules()`)
 - Flag `$_POST`, `$_GET`, or `Yii::$app->request->post()` used directly without going through a model's `rules()`.
@@ -180,15 +180,15 @@ if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 }
 ```
 
-- **en:** "Missing validation — use `$model->load()` + `$model->validate()` before saving"
-- **es:** "Falta validación — usar `$model->load()` + `$model->validate()` antes de guardar"
+- **en:** "Missing validation, use `$model->load()` + `$model->validate()` before saving"
+- **es:** "Falta validación, usar `$model->load()` + `$model->validate()` antes de guardar"
 
 #### Rule 4 — Missing CSRF Protection
 - Flag AJAX requests or form submissions that don't include the CSRF token.
 - Flag actions decorated with `$this->enableCsrfValidation = false` without justification.
 
-- **en:** "CSRF token missing — ensure forms include `<?= Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->csrfToken) ?>` or use `ActiveForm`"
-- **es:** "Falta el CSRF token — verificar que el formulario incluya el token o usar `ActiveForm`"
+- **en:** "CSRF token missing (ensure forms include `<?= Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->csrfToken) ?>` or use `ActiveForm`)"
+- **es:** "Falta el CSRF token (verificar que el formulario incluya el token o usar `ActiveForm`)"
 
 #### Rule 5 — N+1 Queries
 - Flag relation access inside loops without eager loading via `with()` or `joinWith()`.
@@ -207,8 +207,8 @@ foreach ($orders as $order) {
 }
 ```
 
-- **en:** "N+1 query — add eager loading: `->with('relation')`"
-- **es:** "N+1 query — agregar eager loading: `->with('relation')`"
+- **en:** "N+1 query, add eager loading: `->with('relation')`"
+- **es:** "N+1 query, agregar eager loading: `->with('relation')`"
 
 #### Rule 6 — Missing Database Index
 - Flag new foreign key columns in migrations without a corresponding `createIndex()`.
@@ -223,8 +223,8 @@ $this->addColumn('{{%order}}', 'user_id', $this->integer()->notNull());
 $this->createIndex('idx_order_user_id', '{{%order}}', 'user_id');
 ```
 
-- **en:** "Missing index on `column_name` — add `createIndex()` to this migration"
-- **es:** "Falta índice en `column_name` — agregar `createIndex()` en esta migración"
+- **en:** "Missing index on `column_name`, add `createIndex()` to this migration"
+- **es:** "Falta índice en `column_name`, agregar `createIndex()` en esta migración"
 
 #### Rule 7 — Forgotten Debug Statements
 - Flag `var_dump()`, `print_r()`, `echo` used for debugging, `Yii::debug()` calls left in production paths.
@@ -249,15 +249,15 @@ $users = User::find()->where(['active' => 1])->all();
 // View: foreach ($users as $user) { ... }
 ```
 
-- **en:** "Avoid queries/logic in views — move to controller or model"
-- **es:** "Evitar queries/lógica en las vistas — mover al controller o modelo"
+- **en:** "Avoid queries/logic in views, move to controller or model"
+- **es:** "Evitar queries/lógica en las vistas, mover al controller o modelo"
 
 #### Rule 9 — Fat Controller
 - Flag controllers that contain business logic: calculations, complex data transformations, multi-model operations.
 - Suggest extracting to a service class or model method.
 
-- **en:** "Business logic in controller — extract to a service class or model method"
-- **es:** "Lógica de negocio en el controller — extraer a una clase de servicio o método del modelo"
+- **en:** "Business logic in controller, extract to a service class or model method"
+- **es:** "Lógica de negocio en el controller, extraer a una clase de servicio o método del modelo"
 
 #### Rule 10 — `notNull()` Missing in Migration
 - Flag `validates(['field'], 'required')` in the model when the migration column lacks `->notNull()`.
@@ -271,15 +271,15 @@ $this->addColumn('{{%user}}', 'email', $this->string());
 $this->addColumn('{{%user}}', 'email', $this->string()->notNull());
 ```
 
-- **en:** "Add `->notNull()` to the migration column — required validations can be bypassed at DB level"
-- **es:** "Agregar `->notNull()` a la migración — las validaciones requeridas se pueden bypassear a nivel DB"
+- **en:** "Add `->notNull()` to the migration column (required validations can be bypassed at DB level)"
+- **es:** "Agregar `->notNull()` a la migración (las validaciones requeridas se pueden bypassear a nivel DB)"
 
 #### Rule 11 — Missing Access Control
 - Flag controller actions that don't check permissions via `behaviors()` with `AccessControl` or `VerbFilter`.
 - Flag missing `Yii::$app->user->can()` checks for RBAC-protected operations.
 
-- **en:** "Missing access control — add `AccessControl` behavior or `Yii::$app->user->can()` check"
-- **es:** "Falta control de acceso — agregar behavior `AccessControl` o verificación `Yii::$app->user->can()`"
+- **en:** "Missing access control, add `AccessControl` behavior or `Yii::$app->user->can()` check"
+- **es:** "Falta control de acceso, agregar behavior `AccessControl` o verificación `Yii::$app->user->can()`"
 
 #### Rule 12 — Queue Job Passing Full ActiveRecord Object
 - Flag jobs that serialize a full ActiveRecord object instead of passing its ID.
@@ -293,20 +293,20 @@ Yii::$app->queue->push(new SendEmailJob(['user' => $user]));
 Yii::$app->queue->push(new SendEmailJob(['userId' => $user->id]));
 ```
 
-- **en:** "Pass the record ID instead of the object — AR objects can go stale between enqueue and execution"
-- **es:** "Pasar el ID en lugar del objeto — los objetos AR pueden quedar desactualizados entre enqueue y ejecución"
+- **en:** "Pass the record ID instead of the object (AR objects can go stale between enqueue and execution)"
+- **es:** "Pasar el ID en lugar del objeto (los objetos AR pueden quedar desactualizados entre enqueue y ejecución)"
 
 #### Rule 13 — Repetitive View Markup
 - When 3+ view blocks are identical and differ only in data, extract to a partial using `$this->render()` with params or a widget.
 
-- **en:** "Repetitive markup — extract to a partial: `$this->render('_item', ['model' => $item])`"
-- **es:** "Markup repetitivo — extraer a un partial: `$this->render('_item', ['model' => $item])`"
+- **en:** "Repetitive markup, extract to a partial: `$this->render('_item', ['model' => $item])`"
+- **es:** "Markup repetitivo, extraer a un partial: `$this->render('_item', ['model' => $item])`"
 
 #### Rule 14 — Missing `defaultScope` / Soft Delete Guard
 - Flag queries on models that implement soft delete (e.g. `deleted_at`) without a scope filtering deleted records.
 
-- **en:** "Soft delete model — ensure queries filter out deleted records with a default scope or explicit condition"
-- **es:** "Modelo con soft delete — asegurarse de filtrar registros eliminados con un scope por defecto o condición explícita"
+- **en:** "Soft delete model, ensure queries filter out deleted records with a default scope or explicit condition"
+- **es:** "Modelo con soft delete, asegurarse de filtrar registros eliminados con un scope por defecto o condición explícita"
 
 ---
 
@@ -330,14 +330,14 @@ Yii::$app->queue->push(new SendEmailJob(['userId' => $user->id]));
 - Flag non-PSR-compliant class or method names.
 - Yii2 convention: `camelCase` for methods/properties, `snake_case` for DB columns.
 
-- **en:** "Naming inconsistency — Yii2 convention: `camelCase` for methods, `snake_case` for DB columns"
-- **es:** "Inconsistencia de nombres — convención Yii2: `camelCase` para métodos, `snake_case` para columnas DB"
+- **en:** "Naming inconsistency (Yii2 convention: `camelCase` for methods, `snake_case` for DB columns)"
+- **es:** "Inconsistencia de nombres (convención Yii2: `camelCase` para métodos, `snake_case` para columnas DB)"
 
 #### Rule 18 — Missing Test Coverage for New Code
 - Flag new public methods, services, or controllers without corresponding test files in `tests/`.
 
-- **en:** "New public method — add a test for this in `tests/`"
-- **es:** "Nuevo método público — agregar un test en `tests/`"
+- **en:** "New public method, add a test for this in `tests/`"
+- **es:** "Nuevo método público, agregar un test en `tests/`"
 
 #### Rule 19 — Unnecessary View Wrappers
 - Remove `<div>` or `<span>` wrappers in view files that only wrap a single child with no semantic or styling purpose.
@@ -404,6 +404,8 @@ For **multi-line comments** (problem spans several lines), add `start_line` and 
 - Use ` ```suggestion ` blocks for single-line fixes (enables one-click apply in GitHub UI)
 - Use ` ```php ` blocks for multi-line PHP suggestions
 - If there are **no inline comments**, omit the `"comments"` key entirely (empty array is also valid)
+
+When writing the summary body and any inline comment text, follow the user's global prose style rules: no em dash, short sentences, active voice, one word per concept, no long noun strings.
 
 ### Summary body — violations found
 

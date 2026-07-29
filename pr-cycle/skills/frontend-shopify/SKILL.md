@@ -144,8 +144,8 @@ Apply all rules below to every changed file based on the file type detected in S
 {{ product.description }}
 ```
 
-- **en:** "Avoid `| raw` on user-controlled content — Liquid auto-escapes by default; `raw` bypasses XSS protection"
-- **es:** "Evitar `| raw` en contenido controlado por el usuario — Liquid escapa automáticamente; `raw` bypasea la protección XSS"
+- **en:** "Avoid `| raw` on user-controlled content (Liquid auto-escapes by default; `raw` bypasses XSS protection)"
+- **es:** "Evitar `| raw` en contenido controlado por el usuario (Liquid escapa automáticamente; `raw` bypasea la protección XSS)"
 
 #### Rule 2 — Hardcoded Strings (Not Using Translations)
 - Flag user-facing strings hardcoded in Liquid instead of using `{{ 'key' | t }}`.
@@ -158,8 +158,8 @@ Apply all rules below to every changed file based on the file type detected in S
 <button>{{ 'products.product.add_to_cart' | t }}</button>
 ```
 
-- **en:** "Hardcoded string — use `{{ 'key' | t }}` and add the key to `locales/en.default.json`"
-- **es:** "String hardcodeado — usar `{{ 'key' | t }}` y agregar la clave en `locales/en.default.json`"
+- **en:** "Hardcoded string, use `{{ 'key' | t }}` and add the key to `locales/en.default.json`"
+- **es:** "String hardcodeado, usar `{{ 'key' | t }}` y agregar la clave en `locales/en.default.json`"
 
 #### Rule 3 — Images Without `image_url` Filter and `srcset`
 - Flag `<img>` tags using raw CDN URLs or `| img_url` (deprecated) instead of `| image_url` with size params and `srcset`.
@@ -194,8 +194,8 @@ Apply all rules below to every changed file based on the file type detected in S
 - Flag schema JSON that is malformed or missing required fields (`name`, `settings`, `presets` where applicable).
 - Flag settings without `id`, `type`, or `label`.
 
-- **en:** "Missing or invalid section schema — every section needs a `{% schema %}` block with valid JSON"
-- **es:** "Falta o es inválido el schema de la sección — cada sección necesita un bloque `{% schema %}` con JSON válido"
+- **en:** "Missing or invalid section schema, every section needs a `{% schema %}` block with valid JSON"
+- **es:** "Falta o es inválido el schema de la sección, cada sección necesita un bloque `{% schema %}` con JSON válido"
 
 #### Rule 6 — Forgotten Debug Output
 - Flag `{{ variable | json }}` or Liquid `{% comment %}debug{% endcomment %}` dumps left in production code.
@@ -234,23 +234,23 @@ Apply all rules below to every changed file based on the file type detected in S
 {% render 'card-product', product: product, show_badge: true %}
 ```
 
-- **en:** "Repetitive markup — extract to a snippet: `{% render 'snippet-name', param: value %}`"
-- **es:** "Markup repetitivo — extraer a un snippet: `{% render 'snippet-name', param: value %}`"
+- **en:** "Repetitive markup, extract to a snippet: `{% render 'snippet-name', param: value %}`"
+- **es:** "Markup repetitivo, extraer a un snippet: `{% render 'snippet-name', param: value %}`"
 
 #### Rule 9 — Missing Accessibility Attributes
 - Flag interactive elements (`<button>`, `<a>`) without `aria-label` when they have no visible text.
 - Flag missing `alt` on `<img>` tags (use `alt=""` for decorative images).
 - Flag missing `role` on custom interactive elements built from `<div>`.
 
-- **en:** "Missing accessibility attribute — add `aria-label` or `alt` for screen reader support"
-- **es:** "Falta atributo de accesibilidad — agregar `aria-label` o `alt` para soporte de lectores de pantalla"
+- **en:** "Missing accessibility attribute, add `aria-label` or `alt` for screen reader support"
+- **es:** "Falta atributo de accesibilidad, agregar `aria-label` o `alt` para soporte de lectores de pantalla"
 
 #### Rule 10 — Missing Responsive Behavior
 - Flag sections or components with fixed pixel widths instead of fluid/responsive units.
 - Flag missing breakpoint handling in CSS for new components.
 
-- **en:** "Check responsive behavior — verify this renders correctly on mobile (375px) and tablet (768px)"
-- **es:** "Verificar comportamiento responsivo — asegurarse que se vea correctamente en mobile (375px) y tablet (768px)"
+- **en:** "Check responsive behavior, verify this renders correctly on mobile (375px) and tablet (768px)"
+- **es:** "Verificar comportamiento responsivo, asegurarse que se vea correctamente en mobile (375px) y tablet (768px)"
 
 #### Rule 11 — Theme Settings Added Without Defaults
 - Flag new settings in `settings_schema.json` or section schemas without a `default` value.
@@ -264,8 +264,8 @@ Apply all rules below to every changed file based on the file type detected in S
 { "type": "text", "id": "heading", "label": "Heading", "default": "Welcome" }
 ```
 
-- **en:** "Missing `default` for this setting — add one to prevent empty state on fresh installs"
-- **es:** "Falta `default` para este setting — agregar uno para evitar estado vacío en instalaciones nuevas"
+- **en:** "Missing `default` for this setting, add one to prevent empty state on fresh installs"
+- **es:** "Falta `default` para este setting, agregar uno para evitar estado vacío en instalaciones nuevas"
 
 #### Rule 12 — JS Added Without Deferring
 - Flag `<script>` tags in Liquid files without `defer` or `async` that could block rendering.
@@ -290,8 +290,8 @@ Apply all rules below to every changed file based on the file type detected in S
 - Flag use of deprecated filters: `| img_url`, `| money_with_currency` used incorrectly, `| json` in output contexts.
 - Check the [Shopify Liquid changelog](https://shopify.dev/docs/api/liquid) for current equivalents.
 
-- **en:** "Deprecated filter — use `| image_url` instead of `| img_url`"
-- **es:** "Filtro deprecado — usar `| image_url` en vez de `| img_url`"
+- **en:** "Deprecated filter, use `| image_url` instead of `| img_url`"
+- **es:** "Filtro deprecado, usar `| image_url` en vez de `| img_url`"
 
 #### Rule 14 — Dead Code
 - Flag commented-out Liquid blocks, unused snippet `render` calls, settings defined in schema but never referenced in the template.
@@ -310,15 +310,15 @@ Apply all rules below to every changed file based on the file type detected in S
 { "name": "FAQ", "settings": [...], "presets": [{ "name": "FAQ" }] }
 ```
 
-- **en:** "Missing `presets` in section schema — merchants won't be able to add this section in the Theme Customizer"
-- **es:** "Falta `presets` en el schema de la sección — los merchants no podrán agregar esta sección desde el Theme Customizer"
+- **en:** "Missing `presets` in section schema, merchants won't be able to add this section in the Theme Customizer"
+- **es:** "Falta `presets` en el schema de la sección, los merchants no podrán agregar esta sección desde el Theme Customizer"
 
 #### Rule 16 — Inconsistent Naming Conventions
 - Flag section/snippet file names that don't follow the project's naming convention (typically `kebab-case`).
 - Flag schema setting `id` values that don't use `snake_case`.
 
-- **en:** "Naming inconsistency — use `kebab-case` for file names and `snake_case` for setting IDs"
-- **es:** "Inconsistencia de nombres — usar `kebab-case` para nombres de archivos y `snake_case` para IDs de settings"
+- **en:** "Naming inconsistency, use `kebab-case` for file names and `snake_case` for setting IDs"
+- **es:** "Inconsistencia de nombres, usar `kebab-case` para nombres de archivos y `snake_case` para IDs de settings"
 
 ---
 
@@ -379,6 +379,8 @@ For **multi-line comments** (problem spans several lines), add `start_line` and 
 - Use ` ```suggestion ` blocks for single-line fixes (enables one-click apply in GitHub UI)
 - Use ` ```liquid ` blocks for multi-line Liquid suggestions
 - If there are **no inline comments**, omit the `"comments"` key entirely (empty array is also valid)
+
+When writing the summary body and any inline comment text, follow the user's global prose style rules: no em dash, short sentences, active voice, one word per concept, no long noun strings.
 
 ### Summary body — violations found
 

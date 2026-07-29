@@ -26,7 +26,7 @@ You are performing a **ticket readiness analysis** for the Jira ticket ID extrac
 
 > **Mode detection:** Check for `--qa` in the arguments first.
 > - **Normal mode** (no `--qa`): run Steps 1–7.
-> - **QA mode** (`--qa` present): run Steps 1, 2a, and 8. Skip Steps 2b–7 (deep audit, gap analysis, ticket quality check, and other normal-mode-only review steps) — those are for the backend team only.
+> - **QA mode** (`--qa` present): run Steps 1, 2a, and 8. Skip Steps 2b–7 (deep audit, gap analysis, ticket quality check, and other normal-mode-only review steps): those are for the backend team only.
 
 ### 1. Fetch Ticket Details
 
@@ -48,7 +48,7 @@ Do a focused, quick scan to determine whether the feature is actually implemente
 - **Blueprints/Serializers:** are the fields the ticket requires present in the response?
 - **Models:** do the relevant columns, scopes, or associations exist?
 
-Use Grep and Glob directly — this should be fast. The goal is a simple yes/no per acceptance criterion: "is the backend ready for this to be tested?"
+Use Grep and Glob directly, this should be fast. The goal is a simple yes/no per acceptance criterion: "is the backend ready for this to be tested?"
 
 Present a short **Backend Readiness** table in the output:
 
@@ -105,10 +105,10 @@ Review the ticket description itself for quality issues:
 
 ## Output Format
 
-**Normal mode** — full report:
+**Normal mode** (full report):
 
 ```
-## Ticket: [TICKET-ID] — [Title]
+## Ticket: [TICKET-ID] ([Title])
 
 ### Summary
 Brief description of what the ticket asks for.
@@ -145,10 +145,10 @@ Current ticket status and subtask statuses.
 | ...  | ...   | ...             | ...   |
 ```
 
-**QA mode** (`--qa`) — trimmed report focused on testability:
+**QA mode** (`--qa`), trimmed report focused on testability:
 
 ```
-## Ticket: [TICKET-ID] — [Title]
+## Ticket: [TICKET-ID] ([Title])
 
 ### Summary
 Brief description of what the ticket asks for.
@@ -164,29 +164,29 @@ Current ticket status.
 
 > If any row is No or Partial, warn QA not to test those scenarios yet.
 
-### Tambora Test Cases — [Suite Name]
+### Tambora Test Cases ([Suite Name])
 
 | Code | Title | Severity | Testable? |
 |------|-------|----------|-----------|
 | ...  | ...   | ...      | Yes / No / Partial |
 ```
 
-The **Testable?** column cross-references each test case against the Backend Readiness table — if the backend isn't ready for a given scenario, mark it as not testable yet.
+The **Testable?** column cross-references each test case against the Backend Readiness table: if the backend isn't ready for a given scenario, mark it as not testable yet.
 
 Then proceed directly to Step 8 to record results.
 
-### 6. Tambora Test Case Coverage *(normal mode only — skip in QA mode)*
+### 6. Tambora Test Case Coverage *(normal mode only, skip in QA mode)*
 
 **Only run this step if a Tambora suite name was provided and `--qa` is NOT present.**
 
 1. Call `mcp__tambora__check_connectivity`. If it returns `reachable: false`, skip this step and note that Tambora is unavailable.
 2. Call `mcp__tambora__list_test_cases` with the suite name extracted from the arguments (and module if identifiable from context).
 3. For each test case returned, assess backend coverage using what you found in Steps 2–4:
-   - **Fully covered** — backend implemented + existing spec exercises this scenario
-   - **Backend supports it, no spec** — implementation exists but no test asserts it
-   - **Partially covered** — some support exists but a known gap remains (describe the gap)
-   - **Not implemented** — no backend support found
-   - **Frontend only** — no backend action needed
+   - **Fully covered** (backend implemented and existing spec exercises this scenario)
+   - **Backend supports it, no spec** (implementation exists but no test asserts it)
+   - **Partially covered** (some support exists but a known gap remains, describe the gap)
+   - **Not implemented** (no backend support found)
+   - **Frontend only** (no backend action needed)
 4. Present the results as a coverage table with columns: Code | Title | Coverage Status | Notes
 5. Highlight any test cases that reveal missing backend features not already flagged in the Gap Analysis.
 
@@ -199,14 +199,14 @@ After presenting the report, ask the user:
 If the user says yes:
 
 1. Ask which ticket(s) to comment on (it could be the main ticket, a subtask, or any other ticket ID).
-2. Prepare a **professional, concise** version of the relevant findings for the Jira comment. Use a neutral, professional tone — no emojis, nicknames, or playful language.
+2. Prepare a **professional, concise** version of the relevant findings for the Jira comment. Use a neutral, professional tone, no emojis, nicknames, or playful language.
 3. Show the user the comment text and ask for confirmation before posting.
 4. Post the comment by piping the body via stdin: `cat <<'EOF' | jira issue comment add <TICKET-ID> --template -\n<comment body>\nEOF`
 5. Confirm once posted successfully.
 
 The user may want to post different parts of the report to different tickets (e.g., quality issues to the parent ticket, implementation gaps to a subtask, Tambora coverage to the FE ticket). Support this by asking which sections to include for each ticket.
 
-### 8. QA Mode — Record Test Run Results (Optional)
+### 8. QA Mode: Record Test Run Results (Optional)
 
 **Only run this step if `--qa` was present in the arguments AND a Tambora suite name was provided.**
 
@@ -221,11 +221,11 @@ This step walks QA through recording execution results for each test case, one a
    - If they say no → call `mcp__tambora__create_test_run_from_suite` with the module and suite name extracted from arguments. Use the returned `test_run_code` going forward. Confirm to the user: "Created test run [code]. Let's record results."
 
 3. For each test case from the suite (use the list already fetched in Step 6), ask the user one at a time:
-   > "[TC-MPP-XXXX] — [Title]
-   > Status? (passed / failed / skipped / broken) — or press Enter to skip"
+   > "[TC-MPP-XXXX] ([Title])
+   > Status? (passed / failed / skipped / broken), or press Enter to skip"
 
    - Collect the status. If `failed` or `broken`, also ask: "Any error message to record? (optional)"
-   - Store each response; do NOT submit to Tambora yet — wait until all cases are answered.
+   - Store each response; do NOT submit to Tambora yet, wait until all cases are answered.
 
 4. After going through all test cases, show a summary of the collected results and ask:
    > "Ready to submit these results to Tambora? (yes / no)"

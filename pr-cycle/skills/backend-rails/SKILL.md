@@ -141,8 +141,8 @@ Post.all.each { |post| post.author.name }
 Post.includes(:author).each { |post| post.author.name }
 ```
 
-- **en:** "N+1 query — add `.includes(:association)` when fetching `Model`"
-- **es:** "N+1 query — agregá `.includes(:association)` al traer `Model`"
+- **en:** "N+1 query, add `.includes(:association)` when fetching `Model`"
+- **es:** "N+1 query, agregá `.includes(:association)` al traer `Model`"
 
 #### Rule 2 — SQL Injection via String Interpolation
 - Flag `where("name = '#{params[:name]}'")`  or `.sum("#{params[:col]}")`.
@@ -156,23 +156,23 @@ User.where("email = '#{params[:email]}'")
 User.where(email: params[:email])
 ```
 
-- **en:** "SQL injection risk — use parameterized query: `.where(name: params[:name])`"
-- **es:** "Riesgo de SQL injection — usá query parametrizada: `.where(name: params[:name])`"
+- **en:** "SQL injection risk, use parameterized query: `.where(name: params[:name])`"
+- **es:** "Riesgo de SQL injection, usá query parametrizada: `.where(name: params[:name])`"
 
 #### Rule 3 — Missing Strong Parameters / Mass Assignment
 - Flag `params.permit!` (allows all attributes).
 - Flag `update(params)` or `create(params)` without whitelisting.
 - Flag permitting sensitive attributes like `role`, `admin`, `deleted_at`.
 
-- **en:** "Missing strong params — whitelist only the attributes this action needs"
-- **es:** "Faltan strong params — permitir solo los atributos que esta acción necesita"
+- **en:** "Missing strong params, whitelist only the attributes this action needs"
+- **es:** "Faltan strong params, permitir solo los atributos que esta acción necesita"
 
 #### Rule 4 — Missing Database Index
 - Flag new foreign key columns in migrations without a corresponding `add_index`.
 - Flag uniqueness validations (`validates :email, uniqueness: true`) without a unique index in the migration.
 
-- **en:** "Missing index on `column_name` — add `add_index :table, :column_name` to this migration"
-- **es:** "Falta índice en `column_name` — agregar `add_index :table, :column_name` en esta migración"
+- **en:** "Missing index on `column_name`, add `add_index :table, :column_name` to this migration"
+- **es:** "Falta índice en `column_name`, agregar `add_index :table, :column_name` en esta migración"
 
 #### Rule 5 — Forgotten Debug Statements
 - Flag `binding.pry`, `byebug`, `debugger`, `puts`, `p `, `pp ` left in production code.
@@ -184,8 +184,8 @@ User.where(email: params[:email])
 - Flag `validates :field, presence: true` in the model when the corresponding migration column lacks `null: false`.
 - Validations can be bypassed via `update_column` or direct DB writes — the constraint must also exist at DB level.
 
-- **en:** "Add `null: false` to the migration column — validations can be bypassed at DB level"
-- **es:** "Agregá `null: false` a la migración — las validaciones se pueden bypassear a nivel DB"
+- **en:** "Add `null: false` to the migration column (validations can be bypassed at DB level)"
+- **es:** "Agregá `null: false` a la migración (las validaciones se pueden bypassear a nivel DB)"
 
 ---
 
@@ -195,22 +195,22 @@ User.where(email: params[:email])
 - Flag `after_create`, `after_save`, etc. that send emails, make HTTP requests, or enqueue jobs.
 - These should live in a service object or be explicit in the controller.
 
-- **en:** "Move this side effect out of the callback — use a service object or explicit call in the controller"
-- **es:** "Mover este side effect fuera del callback — usar un service object o llamada explícita en el controller"
+- **en:** "Move this side effect out of the callback, use a service object or explicit call in the controller"
+- **es:** "Mover este side effect fuera del callback, usar un service object o llamada explícita en el controller"
 
 #### Rule 8 — Logic in Views / ERB Files
 - Flag database queries inside `.html.erb` files.
 - Flag complex Ruby conditionals or loops in ERB.
 - Suggest moving logic to helpers, presenters, or the controller.
 
-- **en:** "Avoid queries/logic in views — move to a helper or presenter"
-- **es:** "Evitar queries/lógica en las vistas — mover a un helper o presenter"
+- **en:** "Avoid queries/logic in views, move to a helper or presenter"
+- **es:** "Evitar queries/lógica en las vistas, mover a un helper o presenter"
 
 #### Rule 9 — Fat Controller
 - Flag controllers with business logic: calculations, data transformation, multi-model operations.
 
-- **en:** "Business logic in controller — extract to a service object"
-- **es:** "Lógica de negocio en el controller — extraer a un service object"
+- **en:** "Business logic in controller, extract to a service object"
+- **es:** "Lógica de negocio en el controller, extraer a un service object"
 
 #### Rule 10 — `deliver_now` in Mailers
 - Flag `UserMailer.welcome.deliver_now` — should use `deliver_later` to avoid blocking the request.
@@ -230,20 +230,20 @@ MyJob.perform_later(user)
 MyJob.perform_later(user.id)
 ```
 
-- **en:** "Pass the record ID instead of the object — AR objects can go stale between enqueue and perform"
-- **es:** "Pasar el ID en lugar del objeto — los objetos AR pueden quedar desactualizados entre enqueue y perform"
+- **en:** "Pass the record ID instead of the object (AR objects can go stale between enqueue and perform)"
+- **es:** "Pasar el ID en lugar del objeto (los objetos AR pueden quedar desactualizados entre enqueue y perform)"
 
 #### Rule 12 — `has_many` Missing `dependent:`
 - Flag `has_many` or `has_one` associations that don't specify `dependent: :destroy` or `dependent: :nullify` when applicable.
 
-- **en:** "Missing `dependent:` — decide if associated records should be destroyed or nullified when parent is deleted"
-- **es:** "Falta `dependent:` — definir si los registros asociados se destruyen o nullifican cuando se elimina el padre"
+- **en:** "Missing `dependent:`, decide if associated records should be destroyed or nullified when parent is deleted"
+- **es:** "Falta `dependent:`, definir si los registros asociados se destruyen o nullifican cuando se elimina el padre"
 
 #### Rule 13 — Repetitive ERB Markup
 - When 3+ ERB blocks are identical and differ only in data, extract to a partial with locals.
 
-- **en:** "Repetitive markup — extract to a partial: `render partial: 'item', collection: @items, as: :item`"
-- **es:** "Markup repetitivo — extraer a un partial: `render partial: 'item', collection: @items, as: :item`"
+- **en:** "Repetitive markup, extract to a partial: `render partial: 'item', collection: @items, as: :item`"
+- **es:** "Markup repetitivo, extraer a un partial: `render partial: 'item', collection: @items, as: :item`"
 
 #### Rule 14 — Instance Variables in Partials
 - Flag partials that depend on `@instance_variables` set by a controller instead of receiving locals.
@@ -290,8 +290,8 @@ MyJob.perform_later(user.id)
 #### Rule 20 — Missing Test Coverage for New Code
 - Flag new public methods, service objects, or controllers without corresponding spec files.
 
-- **en:** "New public method — add a spec for this"
-- **es:** "Nuevo método público — agregar un spec para esto"
+- **en:** "New public method, add a spec for this"
+- **es:** "Nuevo método público, agregar un spec para esto"
 
 ---
 
@@ -390,6 +390,8 @@ For **multi-line comments** (problem spans several lines), add `start_line` and 
 - Use ` ```suggestion ` blocks for single-line fixes (enables one-click apply in GitHub UI)
 - Use ` ```ruby ` blocks for multi-line Ruby suggestions
 - If there are **no inline comments**, omit the `"comments"` key entirely (empty array is also valid)
+
+When writing the summary body and any inline comment text, follow the user's global prose style rules: no em dash, short sentences, active voice, one word per concept, no long noun strings.
 
 ### Summary body — violations found
 

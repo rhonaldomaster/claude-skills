@@ -395,6 +395,8 @@ For **multi-line comments** (problem spans several lines), add `start_line` and 
 - "Markup repetitivo — extraer a un array const y usar `.map()`"
 - "Usa `<Link>` para navegacion interna en vez de `onClick` + `router.push`"
 
+When writing the summary body and any inline comment text, follow the user's global prose style rules: no em dash, short sentences, active voice, one word per concept, no long noun strings.
+
 ### Summary body — violations found
 
 **COMMENT_LANGUAGE=en:**

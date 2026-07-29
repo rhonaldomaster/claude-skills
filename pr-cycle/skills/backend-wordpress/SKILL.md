@@ -142,8 +142,8 @@ $results = $wpdb->get_results($wpdb->prepare(
 ));
 ```
 
-- **en:** "SQL injection risk — use `$wpdb->prepare()` for all queries with dynamic values"
-- **es:** "Riesgo de SQL injection — usar `$wpdb->prepare()` para todas las queries con valores dinámicos"
+- **en:** "SQL injection risk, use `$wpdb->prepare()` for all queries with dynamic values"
+- **es:** "Riesgo de SQL injection, usar `$wpdb->prepare()` para todas las queries con valores dinámicos"
 
 #### Rule 2 — XSS via Unescaped Output
 - Flag `echo`, `print`, or template output that renders user-controlled data without escaping.
@@ -166,8 +166,8 @@ echo esc_url($url);
 echo wp_kses_post($content);
 ```
 
-- **en:** "XSS risk — escape output with `esc_html()`, `esc_attr()`, `esc_url()`, or `wp_kses_post()` depending on context"
-- **es:** "Riesgo de XSS — escapar salida con `esc_html()`, `esc_attr()`, `esc_url()`, o `wp_kses_post()` según el contexto"
+- **en:** "XSS risk, escape output with `esc_html()`, `esc_attr()`, `esc_url()`, or `wp_kses_post()` depending on context"
+- **es:** "Riesgo de XSS, escapar salida con `esc_html()`, `esc_attr()`, `esc_url()`, o `wp_kses_post()` según el contexto"
 
 #### Rule 3 — Missing Input Sanitization
 - Flag `$_POST`, `$_GET`, `$_REQUEST` used directly without sanitization.
@@ -183,8 +183,8 @@ $name = sanitize_text_field(wp_unslash($_POST['name']));
 update_post_meta($post_id, 'name', $name);
 ```
 
-- **en:** "Missing sanitization — use `sanitize_text_field()`, `absint()`, `sanitize_email()`, etc. before processing user input"
-- **es:** "Falta sanitización — usar `sanitize_text_field()`, `absint()`, `sanitize_email()`, etc. antes de procesar input del usuario"
+- **en:** "Missing sanitization, use `sanitize_text_field()`, `absint()`, `sanitize_email()`, etc. before processing user input"
+- **es:** "Falta sanitización, usar `sanitize_text_field()`, `absint()`, `sanitize_email()`, etc. antes de procesar input del usuario"
 
 #### Rule 4 — Missing Nonce Verification
 - Flag form submissions and AJAX handlers that don't verify a nonce.
@@ -205,8 +205,8 @@ add_action('wp_ajax_my_action', function() {
 });
 ```
 
-- **en:** "Missing nonce verification — add `check_ajax_referer()` or `wp_verify_nonce()` before processing the request"
-- **es:** "Falta verificación de nonce — agregar `check_ajax_referer()` o `wp_verify_nonce()` antes de procesar la request"
+- **en:** "Missing nonce verification, add `check_ajax_referer()` or `wp_verify_nonce()` before processing the request"
+- **es:** "Falta verificación de nonce, agregar `check_ajax_referer()` o `wp_verify_nonce()` antes de procesar la request"
 
 #### Rule 5 — Hardcoded `<script>` or `<link>` Tags
 - Flag scripts or styles added directly in PHP files instead of through the enqueue system.
@@ -221,8 +221,8 @@ add_action('wp_enqueue_scripts', function() {
 });
 ```
 
-- **en:** "Never hardcode `<script>` or `<link>` tags — use `wp_enqueue_script()` / `wp_enqueue_style()`"
-- **es:** "No hardcodear tags `<script>` o `<link>` — usar `wp_enqueue_script()` / `wp_enqueue_style()`"
+- **en:** "Never hardcode `<script>` or `<link>` tags, use `wp_enqueue_script()` / `wp_enqueue_style()`"
+- **es:** "No hardcodear tags `<script>` o `<link>`, usar `wp_enqueue_script()` / `wp_enqueue_style()`"
 
 #### Rule 6 — Missing Capability Check
 - Flag AJAX handlers, REST endpoints, and admin actions that don't verify the user's capability before performing privileged operations.
@@ -243,8 +243,8 @@ add_action('wp_ajax_delete_item', function() {
 });
 ```
 
-- **en:** "Missing capability check — verify with `current_user_can()` before performing privileged operations"
-- **es:** "Falta verificación de capacidad — verificar con `current_user_can()` antes de realizar operaciones privilegiadas"
+- **en:** "Missing capability check, verify with `current_user_can()` before performing privileged operations"
+- **es:** "Falta verificación de capacidad, verificar con `current_user_can()` antes de realizar operaciones privilegiadas"
 
 #### Rule 7 — Forgotten Debug Statements
 - Flag `var_dump()`, `print_r()`, `error_log()` calls, `WP_DEBUG` dumps left in production code.
@@ -274,15 +274,15 @@ echo 'Submit your review';
 echo esc_html__('Submit your review', 'my-theme');
 ```
 
-- **en:** "Not translation ready — wrap user-facing strings with `__()`, `_e()`, or `esc_html__()`"
-- **es:** "No está listo para traducción — envolver strings de usuario con `__()`, `_e()`, o `esc_html__()`"
+- **en:** "Not translation ready, wrap user-facing strings with `__()`, `_e()`, or `esc_html__()`"
+- **es:** "No está listo para traducción, envolver strings de usuario con `__()`, `_e()`, o `esc_html__()`"
 
 #### Rule 10 — Logic in Templates
 - Flag complex PHP logic, queries, or business rules inside template files (`template-parts/`, `*.php` templates).
 - Templates should receive pre-prepared data via the template loader or global variables set in `functions.php`.
 
-- **en:** "Avoid queries/logic in templates — move to `functions.php`, a custom class, or a template controller"
-- **es:** "Evitar queries/lógica en templates — mover a `functions.php`, una clase personalizada, o un template controller"
+- **en:** "Avoid queries/logic in templates, move to `functions.php`, a custom class, or a template controller"
+- **es:** "Evitar queries/lógica en templates, mover a `functions.php`, una clase personalizada, o un template controller"
 
 #### Rule 11 — Missing `wp_unslash()` Before Sanitizing
 - Flag code that sanitizes `$_POST`/`$_GET` without first calling `wp_unslash()`.
@@ -296,8 +296,8 @@ $value = sanitize_text_field($_POST['value']);
 $value = sanitize_text_field(wp_unslash($_POST['value']));
 ```
 
-- **en:** "Missing `wp_unslash()` — call it before sanitizing `$_POST`/`$_GET` to avoid double-slashing"
-- **es:** "Falta `wp_unslash()` — llamarlo antes de sanitizar `$_POST`/`$_GET` para evitar doble escape"
+- **en:** "Missing `wp_unslash()`, call it before sanitizing `$_POST`/`$_GET` to avoid double-slashing"
+- **es:** "Falta `wp_unslash()`, llamarlo antes de sanitizar `$_POST`/`$_GET` para evitar doble escape"
 
 #### Rule 12 — Repetitive Template Markup
 - When 3+ template blocks are identical and differ only in data, extract to a `get_template_part()` call.
@@ -310,8 +310,8 @@ $value = sanitize_text_field(wp_unslash($_POST['value']));
 get_template_part('template-parts/card', null, ['post' => $post]);
 ```
 
-- **en:** "Repetitive markup — extract to a template part: `get_template_part('template-parts/card', null, ['post' => $post])`"
-- **es:** "Markup repetitivo — extraer a un template part: `get_template_part('template-parts/card', null, ['post' => $post])`"
+- **en:** "Repetitive markup, extract to a template part: `get_template_part('template-parts/card', null, ['post' => $post])`"
+- **es:** "Markup repetitivo, extraer a un template part: `get_template_part('template-parts/card', null, ['post' => $post])`"
 
 #### Rule 13 — REST API Endpoint Missing Permission Callback
 - Flag `register_rest_route()` calls where `permission_callback` is set to `__return_true` or is missing for endpoints that should be protected.
@@ -334,8 +334,8 @@ register_rest_route('my-plugin/v1', '/data', [
 ]);
 ```
 
-- **en:** "REST endpoint has no real permission check — replace `__return_true` with an actual capability check"
-- **es:** "El endpoint REST no tiene verificación de permisos real — reemplazar `__return_true` con una verificación de capacidad"
+- **en:** "REST endpoint has no real permission check, replace `__return_true` with an actual capability check"
+- **es:** "El endpoint REST no tiene verificación de permisos real, reemplazar `__return_true` con una verificación de capacidad"
 
 ---
 
@@ -363,8 +363,8 @@ register_rest_route('my-plugin/v1', '/data', [
 #### Rule 17 — Missing Test Coverage for New Code
 - Flag new custom functions, AJAX handlers, or REST endpoints without corresponding tests.
 
-- **en:** "New function — consider adding a test in the test suite"
-- **es:** "Nueva función — considerar agregar un test en el suite de pruebas"
+- **en:** "New function, consider adding a test in the test suite"
+- **es:** "Nueva función, considerar agregar un test en el suite de pruebas"
 
 ---
 
@@ -425,6 +425,8 @@ For **multi-line comments** (problem spans several lines), add `start_line` and 
 - Use ` ```suggestion ` blocks for single-line fixes (enables one-click apply in GitHub UI)
 - Use ` ```php ` blocks for multi-line PHP suggestions
 - If there are **no inline comments**, omit the `"comments"` key entirely (empty array is also valid)
+
+When writing the summary body and any inline comment text, follow the user's global prose style rules: no em dash, short sentences, active voice, one word per concept, no long noun strings.
 
 ### Summary body — violations found
 
