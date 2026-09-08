@@ -88,9 +88,9 @@ gh pr diff $PR_NUMBER
 Study the full diff. Identify what types of files are changed and which rule sets apply:
 
 - `functions.php`, `inc/`, `includes/` → apply hooks, enqueue, and general PHP rules
-- `template-parts/`, `templates/`, `*.php` theme templates → apply template and output escaping rules
+- `template-parts/`, `templates/`, `*.php` theme templates → apply template, output escaping, and frontend (HTML/CSS/JS) rules
 - `*.php` plugin files → apply plugin-specific rules (activation hooks, options API, REST endpoints)
-- `assets/js/` → apply JavaScript/AJAX rules
+- `assets/js/`, `assets/css/` → apply JavaScript/AJAX rules and frontend (HTML/CSS/JS) rules
 - `acf-json/` → apply ACF field group rules
 
 For each changed file, also determine which acceptance criteria (if any) the change maps to.
@@ -365,6 +365,80 @@ register_rest_route('my-plugin/v1', '/data', [
 
 - **en:** "New function, consider adding a test in the test suite"
 - **es:** "Nueva función, considerar agregar un test en el suite de pruebas"
+
+---
+
+### FRONTEND (HTML/CSS/JS) — apply when the theme/plugin also renders frontend markup
+
+These apply to template files (`*.php` output, `template-parts/`) and enqueued assets (`assets/js/`, `assets/css/`).
+
+#### Rule 18 — Forgotten `console.log` (HIGH PRIORITY)
+- Never leave `console.log()` in enqueued JavaScript.
+
+- **en:** "Leftover console.log"
+- **es:** "Se fue un console.log"
+
+#### Rule 19 — Appropriate Elements (MEDIUM PRIORITY)
+- Avoid click handlers on non-interactive elements like `<div>` or `<span>`.
+- Use `<a href="...">` for navigation instead of a `<div>`/`<span>` with a JS click handler that changes `location.href`.
+
+```html
+<!-- Bad -->
+<div class="card" onclick="location.href='/page'">...</div>
+
+<!-- Good -->
+<a href="/page" class="card">...</a>
+```
+
+- **en:** "Use a real `<a>` link for navigation instead of a click handler on a non-interactive element"
+- **es:** "Usar un `<a>` real para navegación en vez de un handler de click sobre un elemento no interactivo"
+
+#### Rule 20 — Image Paths (MEDIUM PRIORITY)
+- Enqueued/template image paths should resolve via `get_template_directory_uri()`, `get_stylesheet_directory_uri()`, or theme functions, not hardcoded relative paths.
+
+```php
+// Bad
+<img src="images/logo.png">
+
+// Good
+<img src="<?php echo esc_url(get_template_directory_uri() . '/images/logo.png'); ?>">
+```
+
+- **en:** "Image path should resolve via `get_template_directory_uri()` instead of a hardcoded relative path"
+- **es:** "La ruta de la imagen debe resolverse con `get_template_directory_uri()` en vez de una ruta relativa fija"
+
+#### Rule 21 — Indentation and Whitespace Consistency (LOW PRIORITY)
+- Consistent indentation in HTML markup, JS, and CSS. No mixed tabs/spaces.
+- No leading/trailing whitespace inside `class` attributes.
+
+```html
+<!-- Bad -->
+<div class=" flex items-center " >
+
+<!-- Good -->
+<div class="flex items-center">
+```
+
+- **en:** "Inconsistent indentation or extra whitespace in the attribute"
+- **es:** "Indentación inconsistente o espacio extra en el atributo"
+
+#### Rule 22 — SVG Tags Not Properly Closed (LOW PRIORITY)
+- Flag unclosed or malformed tags in inline SVG or sprite files.
+
+- **en:** "Unclosed SVG tag"
+- **es:** "Tag de SVG sin cerrar"
+
+#### Rule 23 — Vague URL Parameters (LOW PRIORITY)
+- Be specific with query params passed in links/AJAX calls, e.g. `?post_id=42` not just `?id`.
+
+- **en:** "Be specific with the URL parameter name"
+- **es:** "Ser específico con el nombre del parámetro de la URL"
+
+#### Rule 24 — Dead Frontend Code (LOW PRIORITY)
+- Flag commented-out markup/JS, unused CSS classes, orphaned enqueued assets no longer referenced.
+
+- **en:** "Remove unused frontend code"
+- **es:** "Eliminar código de frontend sin uso"
 
 ---
 
