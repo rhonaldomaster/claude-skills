@@ -12,6 +12,8 @@ Collection of Claude Code skills for development workflows.
 | [rails-lead-review](./rails-lead-review/) | `/rails-lead-review` | Rails PR code review using team lead's architectural opinions and Rails best practices |
 | [frontend-quality-rules](./frontend-quality-rules/) | `/frontend-quality-rules` | Frontend code quality rules for writing and reviewing React/JSX code |
 | [refine-ticket](./refine-ticket/) | `/refine-ticket` | Read a Jira ticket and suggest edits to improve its quality |
+| [ask-opus](./ask-opus/) | `/ask-opus` | Ask Opus for a second opinion on the current task, with full conversation context |
+| [ask-fable](./ask-fable/) | `/ask-fable` | Ask Fable for a second opinion on the current task, with full conversation context |
 
 ## Plugin
 
