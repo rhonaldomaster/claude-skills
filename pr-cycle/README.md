@@ -109,6 +109,7 @@ claude --plugin-dir /path/to/claude-skills/pr-cycle
 - Repetitive JSX → `.map()`
 - Dead code, SVG tags, inconsistent indentation
 - 10+ additional code quality rules (DRY classes, no derived state, condensed conditionals, destructuring, etc.)
+- CSS: utility class order, no arbitrary values over theme tokens, no `!important`, repeated utility blocks extracted, Sass nesting depth, hardcoded values vs variables (Tailwind + Sass/CSS)
 
 ### backend-rails
 - N+1 queries (missing `.includes`)
@@ -125,6 +126,7 @@ claude --plugin-dir /path/to/claude-skills/pr-cycle
 - Repetitive ERB markup
 - Instance variables in partials
 - ERB-specific frontend rules
+- CSS: utility class order, no `!important`, Sass nesting depth, hardcoded values vs variables, naming consistency (Tailwind + Sass)
 
 ### backend-yii2
 - SQL injection (parameterized queries / ActiveRecord)
@@ -150,6 +152,7 @@ claude --plugin-dir /path/to/claude-skills/pr-cycle
 - Not translation ready (missing `__()`, `_e()`)
 - Logic in templates
 - Direct `$wpdb` queries instead of WP APIs
+- CSS: utility class order, no `!important`, Sass nesting depth, hardcoded values vs variables, unscoped global selectors leaking outside the plugin/theme (Tailwind + Sass/CSS)
 
 ### frontend-shopify
 - Raw output without escaping (`| raw`)
@@ -166,6 +169,7 @@ claude --plugin-dir /path/to/claude-skills/pr-cycle
 - Scripts without `defer`/`async`
 - Deprecated Liquid filters (`| img_url`)
 - Missing `presets` in new sections
+- CSS: utility class order, no `!important`, global selectors leaking outside a section, Sass nesting depth, hardcoded values vs variables (Tailwind + Sass/CSS)
 
 ## Inline comment approach
 

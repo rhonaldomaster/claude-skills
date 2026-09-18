@@ -333,6 +333,58 @@ When the PR contains `.html.erb` files, also apply these rules:
 
 ---
 
+### CSS RULES
+
+When the PR contains stylesheet changes, check for `tailwind.config.*` to know whether the Tailwind rules apply, and for `.scss`/`.css` files under `app/assets/stylesheets/` to know whether the traditional CSS rules apply. Both can apply in the same project.
+
+#### Rule 26 — Consistent Utility Class Order (Tailwind, MEDIUM PRIORITY)
+- Group utility classes in a consistent order: layout → spacing → sizing → typography → color → state.
+
+- **en:** "Keep utility class order consistent: layout, spacing, sizing, typography, color, state"
+- **es:** "Mantener orden consistente en las utility classes: layout, spacing, sizing, typography, color, state"
+
+#### Rule 27 — `!important` Without Justification (HIGH PRIORITY)
+- Flag `!important` in CSS/Sass or Tailwind's `!` modifier without a comment explaining why. Fix specificity or source order instead.
+
+```scss
+// Bad
+.card { color: red !important; }
+
+// Good
+.card--error { color: red; }
+```
+
+- **en:** "Avoid `!important`, fix the specificity/source order instead"
+- **es:** "Evitar `!important`, arreglar la especificidad u orden en vez de eso"
+
+#### Rule 28 — Deep Selector Nesting (Sass, MEDIUM PRIORITY)
+- Flag nesting deeper than 3 levels in `.scss` partials — it increases specificity and couples styles to markup structure.
+
+```scss
+// Bad
+.card { .header { .title { .icon { color: red; } } } }
+
+// Good
+.card__icon { color: red; }
+```
+
+- **en:** "Nesting too deep, flatten with a BEM-style class instead"
+- **es:** "Anidamiento muy profundo, aplanar con una clase estilo BEM"
+
+#### Rule 29 — Hardcoded Values Instead of Variables (Sass, LOW PRIORITY)
+- Flag colors, spacing, or breakpoints repeated across `.scss` partials instead of coming from a Sass variable or CSS custom property.
+
+- **en:** "Repeated hardcoded value, use a Sass variable or custom property"
+- **es:** "Valor hardcodeado repetido, usar una variable de Sass o custom property"
+
+#### Rule 30 — Inconsistent Naming Convention (Sass, LOW PRIORITY)
+- Flag mixed naming conventions (e.g. BEM mixed with plain descendant selectors) within the same stylesheet.
+
+- **en:** "Naming inconsistency, stick to one convention (e.g. BEM) across the stylesheet"
+- **es:** "Inconsistencia de nombres, mantener una sola convención (ej. BEM) en toda la hoja de estilos"
+
+---
+
 ## Step 4: Acceptance Criteria Coverage (if Jira ticket provided)
 
 For each acceptance criterion from the Jira ticket, determine whether the PR diff satisfies it:

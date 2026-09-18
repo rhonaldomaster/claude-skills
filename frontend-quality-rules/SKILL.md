@@ -217,6 +217,100 @@ When components accept custom styling, use a pattern where custom classes replac
 <div className={customClasses || 'px-4 py-2 bg-white rounded'}>
 ```
 
+## CSS Rules
+
+Apply the rules below that match how the project styles components. Check for `tailwind.config.*` to know whether Tailwind rules apply; check for `.css`/`.module.css`/`.scss` files to know whether traditional CSS rules apply. Both can apply in the same project.
+
+### Rule 17: Consistent Utility Class Order (Tailwind)
+
+Group utility classes in a consistent order: layout → spacing → sizing → typography → color → state (`hover:`, `focus:`, etc.).
+
+```jsx
+// Bad
+<div className="text-white flex bg-blue-500 p-4 items-center rounded" />
+
+// Good
+<div className="flex items-center p-4 rounded bg-blue-500 text-white" />
+```
+
+### Rule 18: No Arbitrary Values When a Token Exists (Tailwind)
+
+Use theme tokens (`spacing`, `colors`, `fontSize`) instead of arbitrary values when an equivalent token is already defined in the Tailwind config.
+
+```jsx
+// Bad (if theme already defines spacing[5] = 1.25rem)
+<div className="p-[1.25rem]" />
+
+// Good
+<div className="p-5" />
+```
+
+### Rule 19: No `!important` Without Justification
+
+Avoid `!important` (Tailwind's `!` modifier or plain CSS). If a style truly must win, comment why — otherwise fix the specificity or source order instead.
+
+```css
+/* Bad */
+.card { color: red !important; }
+
+/* Good */
+.card--error { color: red; }
+```
+
+### Rule 20: Extract Repeated Utility Blocks
+
+3+ elements sharing the same long utility class string → extract to a component, or a single class via `@apply`, instead of repeating the string.
+
+```jsx
+// Bad
+<span className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-gray-100">A</span>
+<span className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-gray-100">B</span>
+
+// Good
+<Badge>A</Badge>
+<Badge>B</Badge>
+```
+
+### Rule 21: Avoid Deep Selector Nesting (Sass/CSS)
+
+Keep nesting to 3 levels or less. Deep nesting increases specificity and couples styles to markup structure.
+
+```scss
+// Bad
+.card { .header { .title { .icon { color: red; } } } }
+
+// Good
+.card__icon { color: red; }
+```
+
+### Rule 22: Use Variables/Custom Properties Instead of Repeated Hardcoded Values (Sass/CSS)
+
+Colors, spacing, and breakpoints repeated across the stylesheet should come from a variable or custom property, not be retyped.
+
+```css
+/* Bad */
+.card { padding: 16px; color: #1a1a1a; }
+.modal { padding: 16px; color: #1a1a1a; }
+
+/* Good */
+.card { padding: var(--spacing-md); color: var(--color-text); }
+.modal { padding: var(--spacing-md); color: var(--color-text); }
+```
+
+### Rule 23: Consistent Naming Convention (Sass/CSS)
+
+Follow the project's existing naming convention (e.g. BEM) consistently — don't mix conventions within the same stylesheet.
+
+```css
+/* Bad — mixed conventions */
+.card-header { }
+.cardFooter { }
+
+/* Good — BEM */
+.card__header { }
+.card__footer { }
+```
+
 ## Quick Reference Checklist
 
 When writing or reviewing code, check:
@@ -237,3 +331,10 @@ When writing or reviewing code, check:
 - [ ] Ternary used for simple conditionals
 - [ ] No redundant HTML elements
 - [ ] Custom classes override defaults
+- [ ] Consistent utility class order (Tailwind)
+- [ ] No arbitrary values when a theme token exists (Tailwind)
+- [ ] No `!important` without justification
+- [ ] Repeated utility blocks extracted to a component or `@apply`
+- [ ] No deep selector nesting (Sass/CSS)
+- [ ] Variables/custom properties used instead of repeated hardcoded values (Sass/CSS)
+- [ ] Consistent naming convention, not mixed (Sass/CSS)
