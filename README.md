@@ -6,6 +6,7 @@ Collection of Claude Code skills for development workflows.
 
 | Skill | Command | Description |
 |-------|---------|-------------|
+| [generate-agent-rules](./generate-agent-rules/) | `/generate-agent-rules` | Turn `pr-cycle` review rules into a `docs/agent-rules/<stack>.md` file and a short pointer in `CLAUDE.md`/`AGENTS.md` |
 | [generate-patterns](./generate-patterns/) | `/generate-patterns` | Explore a codebase and generate a `PATTERNS.md` documenting recurring implementation patterns |
 | [plan-ticket](./plan-ticket/) | `/plan-ticket` | Read a Jira ticket and generate a structured implementation plan (supports Next.js, Rails, PHP Yii2, WordPress, Shopify) |
 | [lead-review](./lead-review/) | `/lead-review` | Frontend PR code review using team lead's architectural opinions and code standards |
