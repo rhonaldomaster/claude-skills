@@ -313,6 +313,100 @@ const { persona, platform } = props;
 
 ---
 
+### CSS RULES
+
+Check for `tailwind.config.*` to know whether the Tailwind rules apply; check for `.css`/`.module.css`/`.scss` files to know whether the traditional CSS rules apply. Both can apply in the same project.
+
+#### Rule 24 — Consistent Utility Class Order (Tailwind, MEDIUM PRIORITY)
+- Group utility classes in a consistent order: layout → spacing → sizing → typography → color → state.
+
+```jsx
+// Bad
+<div className="text-white flex bg-blue-500 p-4 items-center rounded" />
+
+// Good
+<div className="flex items-center p-4 rounded bg-blue-500 text-white" />
+```
+
+- **en:** "Keep utility class order consistent: layout, spacing, sizing, typography, color, state"
+- **es:** "Mantener orden consistente en las utility classes: layout, spacing, sizing, typography, color, state"
+
+#### Rule 25 — Arbitrary Values Instead of Theme Tokens (Tailwind, MEDIUM PRIORITY)
+- Flag arbitrary values (`w-[123px]`, `text-[#1a1a1a]`) when an equivalent token already exists in the Tailwind theme config.
+
+```jsx
+// Bad (theme already defines spacing[5] = 1.25rem)
+<div className="p-[1.25rem]" />
+
+// Good
+<div className="p-5" />
+```
+
+- **en:** "Use the theme token instead of an arbitrary value, e.g. `p-5` instead of `p-[1.25rem]`"
+- **es:** "Usar el token del theme en vez de un valor arbitrario, ej. `p-5` en vez de `p-[1.25rem]`"
+
+#### Rule 26 — `!important` Without Justification (HIGH PRIORITY)
+- Flag `!important` in CSS or Tailwind's `!` modifier without a comment explaining why it's needed. Fix specificity or source order instead.
+
+```css
+/* Bad */
+.card { color: red !important; }
+
+/* Good */
+.card--error { color: red; }
+```
+
+- **en:** "Avoid `!important`, fix the specificity/source order instead"
+- **es:** "Evitar `!important`, arreglar la especificidad u orden en vez de eso"
+
+#### Rule 27 — Repeated Utility Blocks Not Extracted (Tailwind, MEDIUM PRIORITY)
+- 3+ elements sharing the same long utility class string → extract to a component or a shared class via `@apply`.
+
+```jsx
+// Bad
+<span className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-gray-100">A</span>
+<span className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-gray-100">B</span>
+
+// Good
+<Badge>A</Badge>
+<Badge>B</Badge>
+```
+
+- **en:** "Repeated utility classes, extract to a component or `@apply`"
+- **es:** "Utility classes repetidas, extraer a un componente o `@apply`"
+
+#### Rule 28 — Deep Selector Nesting (Sass/CSS, LOW PRIORITY)
+- Flag nesting deeper than 3 levels in Sass/CSS Modules — it increases specificity and couples styles to markup structure.
+
+```scss
+// Bad
+.card { .header { .title { .icon { color: red; } } } }
+
+// Good
+.card__icon { color: red; }
+```
+
+- **en:** "Nesting too deep, flatten with a BEM-style class instead"
+- **es:** "Anidamiento muy profundo, aplanar con una clase estilo BEM"
+
+#### Rule 29 — Hardcoded Values Instead of Variables (Sass/CSS, LOW PRIORITY)
+- Flag colors, spacing, or breakpoints repeated across stylesheets instead of coming from a CSS custom property or Sass variable.
+
+```css
+/* Bad */
+.card { padding: 16px; color: #1a1a1a; }
+.modal { padding: 16px; color: #1a1a1a; }
+
+/* Good */
+.card { padding: var(--spacing-md); color: var(--color-text); }
+.modal { padding: var(--spacing-md); color: var(--color-text); }
+```
+
+- **en:** "Repeated hardcoded value, use a variable/custom property"
+- **es:** "Valor hardcodeado repetido, usar una variable/custom property"
+
+---
+
 ## Step 4: Acceptance Criteria Coverage (if Jira ticket provided)
 
 For each acceptance criterion from the Jira ticket, determine whether the PR diff satisfies it:

@@ -442,6 +442,58 @@ These apply to template files (`*.php` output, `template-parts/`) and enqueued a
 
 ---
 
+### CSS RULES
+
+Check for `tailwind.config.*` to know whether the Tailwind rules apply; check for `assets/css/*.css`/`.scss` to know whether the traditional CSS rules apply. Many themes use both (Tailwind for new components, legacy Sass for the rest).
+
+#### Rule 25 — Consistent Utility Class Order (Tailwind, MEDIUM PRIORITY)
+- Group utility classes in a consistent order: layout → spacing → sizing → typography → color → state.
+
+- **en:** "Keep utility class order consistent: layout, spacing, sizing, typography, color, state"
+- **es:** "Mantener orden consistente en las utility classes: layout, spacing, sizing, typography, color, state"
+
+#### Rule 26 — `!important` Without Justification (HIGH PRIORITY)
+- Flag `!important` in enqueued CSS/Sass, or Tailwind's `!` modifier, without a comment explaining why. WordPress themes are especially prone to `!important` wars against core/plugin styles — fix specificity instead.
+
+```css
+/* Bad */
+.entry-title { color: red !important; }
+
+/* Good */
+.entry-title--error { color: red; }
+```
+
+- **en:** "Avoid `!important`, fix the specificity/source order instead"
+- **es:** "Evitar `!important`, arreglar la especificidad u orden en vez de eso"
+
+#### Rule 27 — Deep Selector Nesting (Sass, MEDIUM PRIORITY)
+- Flag nesting deeper than 3 levels in `.scss` partials — it increases specificity and couples styles to markup structure.
+
+- **en:** "Nesting too deep, flatten with a BEM-style class instead"
+- **es:** "Anidamiento muy profundo, aplanar con una clase estilo BEM"
+
+#### Rule 28 — Hardcoded Values Instead of Variables (LOW PRIORITY)
+- Flag colors, spacing, or breakpoints repeated across stylesheets instead of coming from a Sass variable or CSS custom property.
+
+- **en:** "Repeated hardcoded value, use a variable or custom property"
+- **es:** "Valor hardcodeado repetido, usar una variable o custom property"
+
+#### Rule 29 — Enqueued Stylesheet Not Scoped (MEDIUM PRIORITY)
+- Flag global selectors (`h1`, `.container`, `a`) in a plugin's enqueued stylesheet that can leak into the parent theme or other plugins. Prefix or scope plugin styles.
+
+```css
+/* Bad — plugin stylesheet affecting every h1 on the site */
+h1 { margin-bottom: 20px; }
+
+/* Good */
+.my-plugin h1 { margin-bottom: 20px; }
+```
+
+- **en:** "Scope this selector to the plugin/theme namespace to avoid leaking into other styles"
+- **es:** "Delimitar este selector al namespace del plugin/theme para no afectar otros estilos"
+
+---
+
 ## Step 4: Acceptance Criteria Coverage (if Jira ticket provided)
 
 For each acceptance criterion from the Jira ticket, determine whether the PR diff satisfies it:

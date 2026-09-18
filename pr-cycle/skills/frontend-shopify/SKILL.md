@@ -322,6 +322,54 @@ Apply all rules below to every changed file based on the file type detected in S
 
 ---
 
+### CSS RULES
+
+Check for `tailwind.config.*` to know whether the Tailwind rules apply (some themes compile Tailwind into `assets/*.css`); check `assets/*.css`/`.scss.liquid` to know whether the traditional CSS rules apply. Both can apply in the same theme.
+
+#### Rule 17 — Consistent Utility Class Order (Tailwind, MEDIUM PRIORITY)
+- Group utility classes in a consistent order: layout → spacing → sizing → typography → color → state.
+
+- **en:** "Keep utility class order consistent: layout, spacing, sizing, typography, color, state"
+- **es:** "Mantener orden consistente en las utility classes: layout, spacing, sizing, typography, color, state"
+
+#### Rule 18 — `!important` Without Justification (HIGH PRIORITY)
+- Flag `!important` in theme CSS, or Tailwind's `!` modifier, without a comment explaining why. Theme CSS often fights the Shopify checkout/cart drawer styles with `!important` — fix specificity or load order instead.
+
+- **en:** "Avoid `!important`, fix the specificity/load order instead"
+- **es:** "Evitar `!important`, arreglar la especificidad u orden de carga en vez de eso"
+
+#### Rule 19 — Global Selectors in Section-Scoped CSS (MEDIUM PRIORITY)
+- Flag bare tag selectors (`h2`, `button`, `.container`) inside a section's inline `{% style %}` block or a section-specific stylesheet — they leak into every other section on the page.
+
+```liquid
+{%- comment -%} Bad — leaks to every h2 on the page {%- endcomment -%}
+{% style %}
+  h2 { margin-bottom: 20px; }
+{% endstyle %}
+
+{%- comment -%} Good {%- endcomment -%}
+{% style %}
+  .hero-{{ section.id }} h2 { margin-bottom: 20px; }
+{% endstyle %}
+```
+
+- **en:** "Scope this selector to the section (e.g. `.hero-{{ section.id }}`) to avoid affecting other sections"
+- **es:** "Delimitar este selector a la sección (ej. `.hero-{{ section.id }}`) para no afectar otras secciones"
+
+#### Rule 20 — Deep Selector Nesting (Sass, LOW PRIORITY)
+- Flag nesting deeper than 3 levels in `.scss.liquid` — it increases specificity and couples styles to markup structure.
+
+- **en:** "Nesting too deep, flatten with a BEM-style class instead"
+- **es:** "Anidamiento muy profundo, aplanar con una clase estilo BEM"
+
+#### Rule 21 — Hardcoded Values Instead of Variables (LOW PRIORITY)
+- Flag colors, spacing, or breakpoints repeated across theme stylesheets instead of coming from a CSS custom property or theme setting.
+
+- **en:** "Repeated hardcoded value, use a custom property or theme setting"
+- **es:** "Valor hardcodeado repetido, usar una custom property o theme setting"
+
+---
+
 ## Step 4: Acceptance Criteria Coverage (if Jira ticket provided)
 
 For each acceptance criterion from the Jira ticket, determine whether the PR diff satisfies it:
