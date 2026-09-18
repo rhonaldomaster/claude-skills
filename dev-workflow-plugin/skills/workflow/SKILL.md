@@ -204,6 +204,19 @@ each thread. Loop until resolved.
 Never merge your own PR or approve your own review. Only merge after explicit approval, per the
 global git rules.
 
+## Move the ticket (after approval)
+
+Once the review is resolved with no outstanding comments and a Jira ticket ID is known, ask:
+"The PR is approved — should I move `<TICKET_ID>` to QA (or whichever column comes next) and
+leave a comment?" Column names vary by project (`QA`, `Ready for QA`, `In QA`, `Deploy to STG`,
+etc.) — ask for the exact target if it isn't already clear from the project's board, rather than
+guessing one.
+
+If `/dev-workflow:pr-cycle-<stack>` was used for the review, it already offers this move as its
+own Step 7 — don't duplicate the prompt, just confirm the outcome. If the review was done
+manually, run this step yourself: `jira issue move <TICKET_ID> "<TARGET_STATUS>"`, then draft a
+comment with the PR link and show it for confirmation before posting.
+
 ---
 
 # Complete Workflow Checklist
@@ -236,5 +249,6 @@ global git rules.
 [ ] PHASE 6 — REVIEW & MERGE
       /dev-workflow:pr-cycle-<stack> <PR> [TICKET]
       ✋ CP-7: review feedback resolved, loop until clean
+      Ask to move the ticket to QA/next column (ask for exact column name) + post comment
       Merge only after explicit approval — never self-approve
 ```
