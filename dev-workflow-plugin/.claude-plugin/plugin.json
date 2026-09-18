@@ -1,0 +1,7 @@
+{
+  "name": "dev-workflow",
+  "version": "1.0.0",
+  "description": "Standalone, all-in-one ticket-to-PR development workflow: plan-ticket, pr-cycle reviews (5 stacks), frontend-quality-rules, and generate-agent-rules bundled behind one orchestrating skill",
+  "author": { "name": "Rhonalf Martinez" },
+  "skills": "./skills/"
+}
