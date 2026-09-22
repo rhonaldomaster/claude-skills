@@ -5,8 +5,7 @@ Standalone, all-in-one ticket-to-PR development workflow. One install gives you 
 skill it orchestrates, bundled in a single plugin — no separate installs required.
 
 Built for day-to-day ticket work: you already have a Jira ticket, you want a quick plan and a
-reviewed PR. It does not write specs or design docs — for that, upfront-planning heavier work,
-see [`sdd`](../sdd/README.md).
+reviewed PR. It does not write specs or design docs.
 
 ## How it flows
 
@@ -38,15 +37,10 @@ can also be run standalone via its own skill.
 | `/dev-workflow:frontend-quality-rules` | React/JSX + CSS code quality rules, applied automatically for frontend JS stacks |
 | `/dev-workflow:generate-agent-rules` | Turns this plugin's `pr-cycle` rules into `docs/agent-rules/<stack>.md` + a pointer in `CLAUDE.md`/`AGENTS.md` |
 
-## Works well with
-
-| Plugin | Why |
-|--------|-----|
-| [`answer-to-copilot`](../answer-to-copilot/README.md) | Used in Phase 5 of the `workflow` skill to triage Copilot PR comments, if that separate plugin happens to be installed too. Not bundled here. |
 
 ## What's not here
 
-- **Spec or design docs.** No upfront spec, validation plan, or acceptance-criteria authoring — the ticket is the input. For that heavier rhythm, see [`sdd`](../sdd/README.md).
+- **Spec or design docs.** No upfront spec, validation plan, or acceptance-criteria authoring — the ticket is the input.
 - **Parallel multi-agent build.** Implementation is a single conversation, not dispatched sub-agent workers across worktrees.
 - **Memory tooling.** Stack-agnostic and memory-agnostic; pairs with whatever memory system is installed, if any.
 
@@ -57,16 +51,14 @@ can also be run standalone via its own skill.
 
 ## Installation
 
-**Via Koombea organization (recommended):** Install from the organization plugin catalog in Claude web.
-```
-/plugin marketplace add koombea/koombea-ai-workflows
-claude plugin install dev-workflow@koombea-workflows
+```bash
+ln -s /path/to/claude-skills/pr-cycle ~/.claude/plugins/pr-cycle
 ```
 
-**Locally:**
+Or load it when starting Claude Code:
+
 ```bash
-git clone git@github.com:koombea/koombea-ai-workflows.git ~/koombea-ai-workflows
-claude --plugin-dir ~/koombea-ai-workflows/plugins/dev-workflow
+claude --plugin-dir /path/to/claude-skills/pr-cycle
 ```
 
 ---
