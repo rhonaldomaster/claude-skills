@@ -1,11 +1,12 @@
 ---
 name: generate-agent-rules
 description: Generate a per-stack code guidelines file for a project (docs/agent-rules/<stack>.md) from this plugin's pr-cycle review rules, then wire a short pointer to it into the project's CLAUDE.md or AGENTS.md. Use when the user wants to set up coding rules for agents in a project, asks to "generate rules", or wants CLAUDE.md/AGENTS.md kept short while still enforcing stack conventions.
+allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 
 # Generate Agent Rules
 
-Turns this `dev-workflow` plugin's `pr-cycle-*` review rules (the checks used to review PRs)
+Turns this `dev-workflow` plugin's `pr-cycle` review rules (the checks used to review PRs)
 into a code guidelines file for the target project, then points the project's
 `CLAUDE.md`/`AGENTS.md` at it with one short line — instead of pasting every rule into the
 agent config and bloating it.
@@ -15,35 +16,35 @@ implement anything.
 
 ## Step 1: Detect Stack
 
-Run in the target project's root, using the same detection table as
-`/dev-workflow:plan-ticket` / `/dev-workflow:workflow`:
+Read `<plugin-root>/references/stack-detection.md` and follow its table to detect the project
+stack. Then map the detected stack to its source rules file:
 
-| Check (in priority order)                                                      | Stack     | Source rules (skill in this plugin) |
-| -------------------------------------------------------------------------------| --------- | ------------------------------------- |
-| `Gemfile` exists AND contains `rails`                                          | Rails     | `pr-cycle-backend-rails`              |
-| `package.json` exists AND contains `next`                                     | Next.js   | `pr-cycle-frontend-nextjs`            |
-| `composer.json` exists AND contains `yiisoft/yii2`                            | PHP Yii2  | `pr-cycle-backend-yii2`               |
-| `style.css` with `Theme Name:` header OR `functions.php` with WordPress hooks | WordPress | `pr-cycle-backend-wordpress`          |
-| `config/settings_schema.json` OR `templates/*.json` + `sections/*.liquid`     | Shopify   | `pr-cycle-frontend-shopify`           |
+| Stack     | Source rules (stack file in this plugin) |
+| --------- | ------------------------------------------ |
+| Rails     | `pr-cycle/stacks/rails.md`                 |
+| Next.js   | `pr-cycle/stacks/nextjs.md`                |
+| PHP Yii2  | `pr-cycle/stacks/yii2.md`                  |
+| WordPress | `pr-cycle/stacks/wordpress.md`             |
+| Shopify   | `pr-cycle/stacks/shopify.md`               |
 
 If the stack cannot be detected, or more than one stack is present (e.g. a Next.js frontend
 alongside a Rails API), ask the user which stack(s) to generate rules for.
 
 ## Step 2: Extract Source Rules
 
-Read the corresponding skill file, bundled in this same plugin, at:
+Read the corresponding stack file, bundled in this same plugin, at:
 
-`<this-plugin>/skills/pr-cycle-<stack>/SKILL.md`
+`<this-plugin>/skills/pr-cycle/stacks/<stack>.md`
 
-Where `<stack>` is one of: `backend-rails`, `frontend-nextjs`, `backend-yii2`,
-`backend-wordpress`, `frontend-shopify`.
+Where `<stack>` is one of: `rails`, `nextjs`, `yii2`, `wordpress`, `shopify`.
 
-Extract only the **"Step 3: Code Quality Review"** section — the numbered rules (`Rule 0`
+Extract only the **"## Code Quality Rules"** section — the numbered rules (`Rule 0`
 through `Rule N`) with their priority tier (HIGH / MEDIUM / LOW) and bad/good code examples.
-Ignore everything else in that file (PR metadata fetching, Jira, GitHub review API, Tambora) —
-none of that belongs in agent guidelines.
+Ignore everything else in that file (Invocation Examples, File → Ruleset Map, Diff Example,
+Code-Fence Language, Stack Label, Tambora Orientation, Example Phrasings) — none of that
+belongs in agent guidelines.
 
-Since `pr-cycle-<stack>` ships inside this same plugin, it's always available once
+Since the stack file ships inside this same plugin, it's always available once
 `dev-workflow` is installed. If for some reason it can't be read, ask the user for the rules
 source or fall back to well-known conventions for the detected stack, and say explicitly that
 you're not using the pr-cycle rules.

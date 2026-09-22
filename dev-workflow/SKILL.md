@@ -1,6 +1,7 @@
 ---
 name: dev-workflow
 description: Full ticket-to-PR development workflow reference. Detects the project's stack and rules, then guides plan -> implement -> test -> commit/PR -> review with explicit approval checkpoints. Use when the user asks about the dev process, wants to work a ticket end-to-end, or asks "what's the workflow here".
+allowed-tools: Bash, Read, Write, Edit, Agent
 ---
 
 # Dev Workflow
@@ -8,12 +9,18 @@ description: Full ticket-to-PR development workflow reference. Detects the proje
 Stack-agnostic ticket-to-PR workflow. This skill is **human-in-the-loop by design**: stop at
 every checkpoint (✋) and wait for explicit approval before continuing. Never skip a checkpoint.
 
-This skill does not review code itself and does not generate project rules. It orchestrates
-existing skills (`plan-ticket`, `pr-cycle:*`, `answer-to-copilot:respond` if installed) and
-tells you which project-specific rules to read at each phase.
+This is the `dev-workflow` plugin's orchestrator skill. It bundles and calls the other skills in
+this same plugin (`plan-ticket`, `pr-cycle-<stack>`, `generate-agent-rules`,
+`frontend-quality-rules`) plus `answer-to-copilot:respond` if that separate plugin happens to be
+installed too. This skill does not review code itself and does not generate project rules on its
+own — it orchestrates.
+
+No `model`/`effort` is pinned here on purpose: this skill mostly routes between checkpoints and
+prompts the user, and the invoked skills already carry their own model/effort pins for the actual
+planning and review work.
 
 ```
-[1. PLAN]        /plan-ticket <ID>            -> plan file
+[1. PLAN]        /dev-workflow:plan-ticket <ID>   -> plan file
                  ✋ CP-1: plan approved
 [2. IMPLEMENT]   code -> manual QA
                  ✋ CP-2: QA approved (loop on fixes: CP-2b)
@@ -23,56 +30,57 @@ tells you which project-specific rules to read at each phase.
                  ✋ CP-5: PR description approved
 [5. POST-PR]     Copilot triage (if available) -> CI
                  ✋ CP-6: CI / Copilot results resolved
-[6. REVIEW]      pr-cycle:<stack> or manual review -> merge
+[6. REVIEW]      /dev-workflow:pr-cycle-<stack> or manual review -> merge
                  ✋ CP-7: review feedback resolved
 ```
 
 ## Step 0: Detect Stack & Load Rules
 
 Detect the project stack by checking files in the current working directory (same table used
-by `plan-ticket`):
+by `/dev-workflow:plan-ticket`):
 
-| Check (in priority order)                                                            | Stack     | pr-cycle skill              |
-| -------------------------------------------------------------------------------------| --------- | ---------------------------- |
-| `Gemfile` exists AND contains `rails`                                                | Rails     | `pr-cycle:backend-rails`     |
-| `package.json` exists AND contains `next`                                           | Next.js   | `pr-cycle:frontend-nextjs`   |
-| `composer.json` exists AND contains `yiisoft/yii2`                                  | PHP Yii2  | `pr-cycle:backend-yii2`      |
-| `style.css` with `Theme Name:` header OR `functions.php` with WordPress hooks       | WordPress | `pr-cycle:backend-wordpress` |
-| `config/settings_schema.json` OR `templates/*.json` + `sections/*.liquid`           | Shopify   | `pr-cycle:frontend-shopify`  |
+| Check (in priority order)                                                            | Stack     | pr-cycle skill in this plugin      |
+| -------------------------------------------------------------------------------------| --------- | ------------------------------------ |
+| `Gemfile` exists AND contains `rails`                                                | Rails     | `/dev-workflow:pr-cycle-backend-rails`     |
+| `package.json` exists AND contains `next`                                           | Next.js   | `/dev-workflow:pr-cycle-frontend-nextjs`   |
+| `composer.json` exists AND contains `yiisoft/yii2`                                  | PHP Yii2  | `/dev-workflow:pr-cycle-backend-yii2`      |
+| `style.css` with `Theme Name:` header OR `functions.php` with WordPress hooks       | WordPress | `/dev-workflow:pr-cycle-backend-wordpress` |
+| `config/settings_schema.json` OR `templates/*.json` + `sections/*.liquid`           | Shopify   | `/dev-workflow:pr-cycle-frontend-shopify`  |
 
 If the stack cannot be detected, ask the user which stack applies before proceeding.
 
 **Load project rules, in this order, and follow whichever exist:**
 
 1. `CLAUDE.md` / `AGENTS.md` / `.cursorrules` / `.windsurfrules` at the project root — project
-   conventions always take precedence over generic defaults.
+   conventions always take precedence over generic defaults. If the project has none of these
+   yet, offer `/dev-workflow:generate-agent-rules` to set one up from this plugin's `pr-cycle`
+   rules.
 2. If the detected stack is a frontend JS stack (Next.js, or any React/JSX codebase), also apply
-   the `frontend-quality-rules` skill's rules when writing or reviewing code.
+   the `/dev-workflow:frontend-quality-rules` skill's rules when writing or reviewing code.
 3. Any stack-specific doc the project itself points to (e.g. `docs/conventions/`).
 
 If none of these exist, say so explicitly rather than assuming conventions.
 
-**Related skills used by this workflow (only invoke the ones that exist in the current setup):**
+**Skills bundled in this plugin (all invoked with the `dev-workflow:` prefix):**
 
 | Skill | Phase | Note |
 |-------|-------|------|
-| `/plan-ticket <ID>` | 1 — Plan | Generates `.docs/plans/<ticket-id>/plan.md` |
-| `frontend-quality-rules` | 2, 6 | Applied automatically for frontend JS stacks |
-| `/pr-cycle:<stack> <PR> [TICKET] [suite]` | 6 — Review | Full PR review + Jira AC coverage |
-| `/answer-to-copilot:respond <PR>` | 5 — Post-PR | Only if that plugin is installed in this setup |
+| `/dev-workflow:plan-ticket <ID>` | 1 — Plan | Generates `.docs/plans/<ticket-id>/plan.md` |
+| `/dev-workflow:frontend-quality-rules` | 2, 6 | Applied automatically for frontend JS stacks |
+| `/dev-workflow:pr-cycle-<stack> <PR> [TICKET] [suite]` | 6 — Review | Full PR review + Jira AC coverage |
+| `/dev-workflow:generate-agent-rules` | Setup | Not part of the phase flow; run standalone to set up `CLAUDE.md`/`AGENTS.md` |
+| `/answer-to-copilot:respond <PR>` | 5 — Post-PR | External plugin, not bundled here — only if separately installed |
 
-If `plan-ticket` or `pr-cycle` are not available in the current environment, do the equivalent
-step manually and say so.
+All of the above except `answer-to-copilot:respond` ship inside this plugin, so they're always
+available once `dev-workflow` is installed. If one is missing anyway, do the equivalent step
+manually and say so.
 
 ---
 
 # Phase 1 — Plan
 
-Run `/plan-ticket <TICKET_ID>` if available. It reads the Jira ticket, explores the codebase,
+Run `/dev-workflow:plan-ticket <TICKET_ID>`. It reads the Jira ticket, explores the codebase,
 and writes `.docs/plans/<ticket-id-lowercase>/plan.md`.
-
-If `plan-ticket` is not available, produce the same output manually: read the ticket, explore
-affected files, list files to change, and flag open questions.
 
 ## ✋ CP-1 — Plan approval
 
@@ -188,12 +196,9 @@ it as known-flaky, or wait for the developer to investigate.
 
 # Phase 6 — Review & Merge
 
-Run the matching `/pr-cycle:<stack>` skill from Step 0's table if it's available in this setup,
-passing the PR number and, if known, the Jira ticket ID. It reviews the diff against stack rules
-and the ticket's acceptance criteria, leaves inline comments, and can move the ticket to QA on
-approval.
-
-If `pr-cycle` is not available, do the review manually against the rules loaded in Step 0.
+Run the matching `/dev-workflow:pr-cycle-<stack>` skill from Step 0's table, passing the PR
+number and, if known, the Jira ticket ID. It reviews the diff against stack rules and the
+ticket's acceptance criteria, leaves inline comments, and can move the ticket to QA on approval.
 
 ## ✋ CP-7 — Review feedback
 
@@ -212,10 +217,10 @@ leave a comment?" Column names vary by project (`QA`, `Ready for QA`, `In QA`, `
 etc.) — ask for the exact target if it isn't already clear from the project's board, rather than
 guessing one.
 
-If `/pr-cycle:<stack>` was used for the review, it already offers this move as its own Step 7 —
-don't duplicate the prompt, just confirm the outcome. If the review was done manually, run this
-step yourself: `jira issue move <TICKET_ID> "<TARGET_STATUS>"`, then draft a comment with the PR
-link and show it for confirmation before posting.
+If `/dev-workflow:pr-cycle-<stack>` was used for the review, it already offers this move as its
+own Step 7 — don't duplicate the prompt, just confirm the outcome. If the review was done
+manually, run this step yourself: `jira issue move <TICKET_ID> "<TARGET_STATUS>"`, then draft a
+comment with the PR link and show it for confirmation before posting.
 
 ---
 
@@ -223,7 +228,7 @@ link and show it for confirmation before posting.
 
 ```
 [ ] PHASE 1 — PLAN
-      /plan-ticket <ID> (or manual equivalent)
+      /dev-workflow:plan-ticket <ID>
       ✋ CP-1: plan + open questions approved
 
 [ ] PHASE 2 — IMPLEMENT
@@ -247,7 +252,7 @@ link and show it for confirmation before posting.
       ✋ CP-6: CI / Copilot results resolved
 
 [ ] PHASE 6 — REVIEW & MERGE
-      /pr-cycle:<stack> <PR> [TICKET] (if available) or manual review
+      /dev-workflow:pr-cycle-<stack> <PR> [TICKET]
       ✋ CP-7: review feedback resolved, loop until clean
       Ask to move the ticket to QA/next column (ask for exact column name) + post comment
       Merge only after explicit approval — never self-approve

@@ -80,9 +80,13 @@ Include these sections in the plan between "Reusable Code" and "Implementation S
 
 ## Verification Commands
 
+Detect the package manager from the lockfile present in the project root (`pnpm-lock.yaml` →
+`pnpm`, `yarn.lock` → `yarn`, `package-lock.json` → `npm`, `bun.lockb` → `bun`), and read the
+exact script names from `package.json`'s `scripts` block — do not assume `test:run` exists.
+
 ```
-- Run `pnpm build` — build succeeds with no errors
-- Run `pnpm lint` — no lint errors
-- Run `pnpm type-check` — no TypeScript errors
-- Run `pnpm test:run` — all tests pass
+- Run `<pm> build` — build succeeds with no errors
+- Run `<pm> lint` — no lint errors (if a lint script exists)
+- Run `<pm> type-check` — no TypeScript errors (if a type-check script exists)
+- Run `<pm> test` (or whichever test script is defined in package.json) — all tests pass
 ```

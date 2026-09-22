@@ -1,6 +1,7 @@
 ---
 name: frontend-quality-rules
 description: Frontend code quality rules for writing and reviewing React/JSX code. This skill is automatically applied when writing React/JSX code, reviewing code, or when the user mentions code quality.
+allowed-tools: Read
 ---
 
 # Frontend Code Quality Rules

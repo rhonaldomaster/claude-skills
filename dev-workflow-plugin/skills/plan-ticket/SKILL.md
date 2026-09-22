@@ -5,6 +5,7 @@ arguments:
   - name: TICKET_ID
     description: "Jira ticket key (e.g., 'MPP-650'). Must include the project prefix."
     required: true
+allowed-tools: Bash, Read, Write, Agent
 model: best
 effort: xhigh
 ---
@@ -58,15 +59,8 @@ Generate a structured implementation plan from a Jira ticket. This skill creates
 
 ## Step 3: Detect Stack & Load Rules
 
-Detect the project stack by checking files in the current working directory:
-
-| Check (in priority order)                                          | Stack     |
-| ------------------------------------------------------------------ | --------- |
-| `Gemfile` exists AND contains `rails`                              | Rails     |
-| `package.json` exists AND contains `next`                          | Next.js   |
-| `composer.json` exists AND contains `yiisoft/yii2`                 | PHP Yii2  |
-| `style.css` exists with `Theme Name:` header OR `functions.php` with WordPress hooks | WordPress |
-| `config/settings_schema.json` exists OR `templates/*.json` + `sections/*.liquid` exist | Shopify   |
+Read `<plugin-root>/references/stack-detection.md` and follow its table to detect the project
+stack.
 
 Once detected, read the corresponding stack rules file from the skill's base directory:
 
@@ -82,8 +76,6 @@ The stack file defines:
 - Verification commands (e.g., `rspec` vs `pnpm test:run`)
 
 **Follow the instructions in the loaded stack file for Steps 3a (Explore) and the stack-specific sections in Step 4.**
-
-If the stack cannot be detected, ask the user which stack to use before proceeding.
 
 ## Step 3a: Explore the Codebase
 

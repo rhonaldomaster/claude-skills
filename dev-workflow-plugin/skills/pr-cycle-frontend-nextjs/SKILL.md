@@ -114,7 +114,8 @@ Apply all rules below to every changed file.
 
 ### PR Metadata (check first)
 
-#### Rule 0 — PR Title & Commit Messages
+#### Rule 0 — PR Title & Commit Messages (only if `TICKET_ID` is set)
+- Skip this rule entirely if no Jira ticket ID was provided or inferred — code-only reviews have no ticket to reference.
 - PR title **must** include the Jira ticket number and a meaningful description.
 - Commit messages **must** also reference the ticket.
 - Reject vague titles: "initial commit", "update", "fix", "WIP", "changes".
@@ -527,7 +528,8 @@ _Lead review bot_
 
 ### Summary body — no violations (approve)
 
-Use `"event": "APPROVE"` in the payload instead of `"REQUEST_CHANGES"`.
+Use `"event": "APPROVE"` in the payload instead of `"REQUEST_CHANGES"`. Include the Acceptance
+criteria line only if `TICKET_ID` was set — omit it entirely for code-only reviews.
 
 **COMMENT_LANGUAGE=en:**
 ```
