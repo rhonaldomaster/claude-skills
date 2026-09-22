@@ -52,13 +52,13 @@ can also be run standalone via its own skill.
 ## Installation
 
 ```bash
-ln -s /path/to/claude-skills/pr-cycle ~/.claude/plugins/pr-cycle
+ln -s /path/to/claude-skills/dev-workflow ~/.claude/plugins/dev-workflow
 ```
 
 Or load it when starting Claude Code:
 
 ```bash
-claude --plugin-dir /path/to/claude-skills/pr-cycle
+claude --plugin-dir /path/to/claude-skills/dev-workflow
 ```
 
 ---
