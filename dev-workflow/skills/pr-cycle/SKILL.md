@@ -10,9 +10,7 @@ description: |
   - `/dev-workflow:pr-cycle 42 MPP-221 "MPP-150 Memories list view"`
 user-invocable: true
 argument-hint: '<PR_NUMBER> [JIRA_TICKET_ID?] [tambora-suite-name?]'
-allowed-tools: Bash, Read, Glob, Grep, Agent
-model: opus
-effort: xhigh
+allowed-tools: Bash, Read, Glob, Grep, Agent, mcp__tambora__check_connectivity, mcp__tambora__list_test_cases, mcp__tambora__create_test_run_from_suite, mcp__tambora__add_test_run_results, mcp__tambora__complete_test_run
 ---
 
 # PR Cycle Review
@@ -46,8 +44,8 @@ field's value is its first non-blank line after the field's `##` heading; any pr
 line is explanatory and not part of the value. A field with no non-blank line before the next
 `##` heading is empty. It defines:
 
-- **File → Ruleset Map** — which rule sets apply to which changed files (used in Step 2)
-- **Diff Example** — a stack-specific example for reading diff line numbers (used in Step 2)
+- **File → Ruleset Map** — which rule sets apply to which changed files (used by the reviewer agent, Steps 2-4)
+- **Diff Example** — a stack-specific example for reading diff line numbers (used by the reviewer agent, Steps 2-4)
 - **Code-Fence Language** — the language tag for multi-line suggestion blocks (used in Step 5 & 6)
 - **Stack Label (en)** / **Stack Label (es)** — the stack name substituted into the summary-body
   templates (used in Step 5 & 6); may be empty for either language. The two are independent
@@ -59,9 +57,9 @@ line is explanatory and not part of the value. A field with no non-blank line be
 - **Example Phrasings** — optional; if present, example en/es comment strings to draw from when
   writing inline comments for this stack
 - **Code Quality Rules** — the numbered rules (`Rule 0` through `Rule N`) with priority tier
-  (HIGH/MEDIUM/LOW) and bad/good code examples (used in Step 3)
+  (HIGH/MEDIUM/LOW) and bad/good code examples (used by the reviewer agent, Steps 2-4)
 
-**Follow the loaded stack file for all stack-specific content referenced in Steps 2, 3, 5 & 6,
+**Follow the loaded stack file for all stack-specific content referenced in Steps 2-4, 5 & 6,
 and 8 below.**
 
 ---
@@ -96,7 +94,7 @@ Keep the list of already-reported issues in memory. For each violation you find 
 
 ## Step 1a: Fetch Jira Ticket (if provided)
 
-If a Jira ticket ID was extracted from the arguments:
+If `TICKET_ID` is set — whether it came from `$ARGUMENTS` or was inferred from the PR title in Step 1:
 
 ```bash
 jira issue view $TICKET_ID --plain
@@ -117,42 +115,28 @@ If no Jira ticket was provided, skip this step and proceed with code-only review
 
 ---
 
-## Step 2: Review the Diff
+## Steps 2-4: Independent Review (delegated to a sub-agent)
 
-```bash
-gh pr diff $PR_NUMBER
-```
+The review itself (diff reading, code quality rules, acceptance criteria coverage) is done by a
+separate sub-agent with a clean context, so the reviewer is not the session that wrote the code.
 
-Study the full diff. Identify what types of files are changed and which rule sets apply, using
-the **File → Ruleset Map** from the loaded stack file.
+Launch the `dev-workflow:pr-reviewer` agent (defined in `<plugin-root>/agents/pr-reviewer.md`,
+which sets its own model and effort) with the Agent tool. Do not pass a `model` parameter: it would
+override the agent's own model. Pass only these inputs, nothing else from this conversation:
 
-For each changed file, also determine which acceptance criteria (if any) the change maps to.
+- `PR_NUMBER`
+- `STACK_FILE`: absolute path to the stack file loaded in Step 0
+- `COMMENT_LANGUAGE`
+- `EXISTING_COMMENTS`: the list collected in Step 1
+- `ACCEPTANCE_CRITERIA`: the list extracted in Step 1a (empty if no ticket)
 
-**Reading diff line numbers:**
+The agent returns `FINDINGS`, `AC_COVERAGE` and `POSITIVE`. Use them in Steps 5 & 6:
 
-Use the **Diff Example** from the loaded stack file as a reference for how to read hunk headers
-for this stack's file types.
+- Each finding becomes one inline comment.
+- Flag any AC that is **not implemented** or only **partially implemented** in the summary body.
+- `AC_COVERAGE` is also the input for Step 8.
 
-Count line numbers from the right side (`+`) of the `@@` hunk header. Always comment on the **exact line where the problem begins**.
-
----
-
-## Step 3: Code Quality Review
-
-Apply all rules from the loaded stack file's **Code Quality Rules** section to every changed
-file, based on the file type detected in Step 2.
-
----
-
-## Step 4: Acceptance Criteria Coverage (if Jira ticket provided)
-
-For each acceptance criterion from the Jira ticket, determine whether the PR diff satisfies it:
-
-| Acceptance Criterion | Status | Evidence (file:line) |
-|----------------------|--------|----------------------|
-| ...                  | Implemented / Partial / Missing / N/A | ... |
-
-Flag any AC that is **not implemented** or only **partially implemented** — note it in the summary review comment.
+If the agent returns malformed output, relaunch it once. If it fails again, tell the user and stop.
 
 ---
 
@@ -315,7 +299,7 @@ EOF
 
 2. Call `mcp__tambora__list_test_cases` with the suite name extracted from arguments.
 
-3. For each test case, cross-reference against the PR diff and AC coverage from Step 4. Use the
+3. For each test case, cross-reference against the PR diff and AC coverage from the reviewer agent (Steps 2-4). Use the
    coverage status wording that matches the loaded stack file's **Tambora Orientation**:
    - `backend` stacks: `Fully covered / Backend supports it, no spec / Partial / Not implemented / Frontend only`
    - `frontend` stacks: `Fully covered / UI exists, no test / Partial / Not implemented / Backend only`
@@ -325,7 +309,7 @@ EOF
 | ...  | ...   | (see wording above) | ... |
 
 4. Highlight test cases that reveal missing features (on the side matching this stack's
-   Tambora Orientation) not already flagged in Step 4.
+   Tambora Orientation) not already flagged in Steps 2-4.
 
 5. Ask the user if they want to record test run results:
 

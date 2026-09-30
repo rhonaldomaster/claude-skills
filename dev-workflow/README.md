@@ -1,34 +1,72 @@
-# dev-workflow
+# dev-workflow Plugin
 
-Stack-agnostic ticket-to-PR development workflow with explicit approval checkpoints.
+Standalone, all-in-one ticket-to-PR development workflow. One install gives you the full
+`plan → implement → test → commit/PR → review` cycle with approval checkpoints, plus every
+skill it orchestrates, bundled in a single plugin — no separate installs required.
 
-Detects the project's stack (Rails, Next.js, PHP Yii2, WordPress, Shopify — same detection
-table as `plan-ticket`), loads its own `CLAUDE.md`/`AGENTS.md`/`.cursorrules` rules, and guides
-plan → implement → test → commit/PR → review, stopping at each checkpoint for approval.
+Built for day-to-day ticket work: you already have a Jira ticket, you want a quick plan and a
+reviewed PR. It does not write specs or design docs — for that, upfront-planning heavier work,
+see [`sdd`](../sdd/README.md).
 
-It orchestrates existing skills rather than duplicating them:
+## How it flows
 
-- [`plan-ticket`](../plan-ticket/) for Phase 1
-- [`frontend-quality-rules`](../frontend-quality-rules/) for frontend JS stacks
-- [`pr-cycle`](../pr-cycle/) skills for Phase 6 review
-- `answer-to-copilot:respond` for Phase 5, only if that plugin is installed
-
-Does not generate project rules (`CLAUDE.md`/`AGENTS.md`) — that's a separate, future skill.
-
-## Usage
-
-```
-/dev-workflow
+```mermaid
+%%{init: {"theme": "base", "themeVariables": {"background": "#FAFAFA", "primaryColor": "#DDE8E6", "primaryTextColor": "#1A1A2E", "primaryBorderColor": "#5A9A90", "lineColor": "#5A9A90", "secondaryColor": "#EEF4F3", "clusterBkg": "#EEF4F3", "clusterBorder": "#8ABDB6", "titleColor": "#1A1A2E", "edgeLabelBackground": "#FAFAFA", "fontFamily": "Arial, Helvetica, sans-serif"}}}%%
+flowchart TD
+    plan["Plan<br/>plan-ticket"] --> implement["Implement"] --> test["Test"] --> pr["Commit / PR"] --> review["Review<br/>pr-cycle"]
 ```
 
-Or just start working a ticket and mention you want the full workflow.
+`workflow` is the orchestrator that walks these phases with approval checkpoints; each phase
+can also be run standalone via its own skill.
+
+## Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Format** | `claude-plugin` |
+| **Works with** | `claude-code` |
+| **Scope** | Development |
+| **Author** | Rhonalf Martinez |
+
+## Skills
+
+| Skill | Description |
+|-------|--------------|
+| `/dev-workflow:workflow` | The orchestrator — detects stack, loads project rules, walks phases 1-6 with checkpoints |
+| `/dev-workflow:plan-ticket <ID>` | Reads a Jira ticket, explores the codebase, writes an implementation plan |
+| `/dev-workflow:pr-cycle <PR> [TICKET] [suite]` | Full PR review — detects the stack automatically (Rails, Next.js, PHP Yii2, WordPress, Shopify). The diff review runs in a separate sub-agent ([`pr-reviewer`](agents/pr-reviewer.md)) so the reviewer is independent from the session that wrote the code |
+| `/dev-workflow:frontend-quality-rules` | React/JSX + CSS code quality rules, applied automatically for frontend JS stacks |
+| `/dev-workflow:generate-agent-rules` | Turns this plugin's `pr-cycle` rules into `docs/agent-rules/<stack>.md` + a pointer in `CLAUDE.md`/`AGENTS.md` |
+
+## Works well with
+
+| Plugin | Why |
+|--------|-----|
+| [`answer-to-copilot`](../answer-to-copilot/README.md) | Used in Phase 5 of the `workflow` skill to triage Copilot PR comments, if that separate plugin happens to be installed too. Not bundled here. |
+
+## What's not here
+
+- **Spec or design docs.** No upfront spec, validation plan, or acceptance-criteria authoring — the ticket is the input. For that heavier rhythm, see [`sdd`](../sdd/README.md).
+- **Parallel multi-agent build.** Implementation is a single conversation, not dispatched sub-agent workers across worktrees.
+- **Memory tooling.** Stack-agnostic and memory-agnostic; pairs with whatever memory system is installed, if any.
+
+## Requirements
+
+- `gh` CLI for GitHub operations
+- `jira` CLI, or the Atlassian MCP server as a fallback, for Jira operations
 
 ## Installation
 
-Symlink into your global skills directory:
-
 ```bash
-ln -s /path/to/claude-skills/dev-workflow ~/.claude/skills/dev-workflow
+ln -s /path/to/claude-skills/dev-workflow ~/.claude/plugins/dev-workflow
 ```
 
-Or copy into a project's `.claude/skills/` directory.
+Or load it when starting Claude Code:
+
+```bash
+claude --plugin-dir /path/to/claude-skills/dev-workflow
+```
+
+---
+
+[All Plugins](../README.md)
