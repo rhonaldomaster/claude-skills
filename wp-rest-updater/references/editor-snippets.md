@@ -49,4 +49,4 @@ Paste `content.raw` (saved by `wp-rest.sh get`) as the output of `jq -Rs . file.
 }
 ```
 
-Changing an attribute updates both the comment JSON and the saved HTML, so there is nothing to keep in sync by hand. Untouched blocks re-serialize byte-identical (checked on a hero block, a parent with nested children, a core paragraph and a dynamic block). Always diff the result against the original before updating.
+Changing an attribute updates both the comment JSON and the saved HTML, so there is nothing to keep in sync by hand. Untouched blocks re-serialize unchanged in most cases (checked on a hero block, a parent with nested children, a core paragraph and a dynamic block). One known difference, seen on a real page: a literal non-breaking space (U+00A0) inside a rich-text value is written back as `&nbsp;`. It renders the same, but the line shows up in the diff even if you did not touch that block. Always diff the result against the original before updating.

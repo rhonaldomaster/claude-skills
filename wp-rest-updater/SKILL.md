@@ -80,6 +80,7 @@ Local and remote must run the same block code. Confirm the remote has the curren
 
 ## Known limits
 
+- Re-serializing can change untouched text: a literal non-breaking space (U+00A0) in a rich-text value comes back as `&nbsp;`. It renders the same. If it appears in the diff, tell the user it is not an edit they asked for and let them decide.
 - Unverified: whether every page's existing blocks are valid in the editor. The edit snippet stops on invalid blocks.
 - Write permission depends on the user's role. The `wp:action-unfiltered-html` link in a page response shows whether the user can save unfiltered HTML. Without it, WordPress may strip markup.
 - Edits via REST create revisions only if the site has them enabled. The local backup is the reliable one.
