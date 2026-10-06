@@ -18,25 +18,29 @@ Not for: theme or plugin code, media uploads, menus, widgets, deleting content, 
 ## Setup (once per project)
 
 1. The user creates an Application Password: wp-admin > Users > Profile > Application Passwords. Prefer a user with the Editor role over Administrator.
-2. The credentials go in `~/.netrc`, never in the repo or in chat:
+2. The credentials go in `~/.netrc`, never in the repo or in chat. Remove the spaces from the Application Password (or wrap it in double quotes). An unquoted password with spaces is cut at the first space and returns 401:
    ```
-   machine <site-host> login <wp-username> password <application-password>
+   machine <site-host> login <wp-username> password <application-password-without-spaces>
    ```
-3. Export the REST base, including any subpath: `export WP_REST_BASE=https://<host>[/<subpath>]/wp-json`
-4. Run `scripts/wp-rest.sh whoami`. A 200 with the expected user means auth works. A 401 or 403 means a security plugin, WAF, or host is blocking it.
+3. Set the REST base, including any subpath, in the project's `.claude/settings.local.json` (not committed): `{ "env": { "WP_REST_BASE": "https://<host>[/<subpath>]/wp-json" } }`. A plain `export` does not persist between Bash calls. If the variable is not visible, restart the session.
+4. Run `<skill-dir>/scripts/wp-rest.sh whoami`. A 200 with the expected user means auth works. A 401 or 403 means a security plugin, WAF, or host is blocking it, or the password in `~/.netrc` is wrong.
 
-Backups go to `$WP_REST_BACKUP_DIR` (default `$TMPDIR/wp-rest-backups`).
+`WP_REST_BASE` must be `https://`. The script refuses anything else because it sends the password with every request. Needs curl 7.76 or later and `jq`.
+
+Backups go to `$WP_REST_BACKUP_DIR` (default `~/.wp-rest-backups`).
 
 ## Commands
 
+`<skill-dir>` is this skill's base directory. The working directory is the user's project, so call the script by its absolute path.
+
 ```
-scripts/wp-rest.sh whoami
-scripts/wp-rest.sh get <pages|posts> <id> <out-file>
-scripts/wp-rest.sh create <pages|posts> <title> <slug>
-scripts/wp-rest.sh update <pages|posts> <id> <content-file>
+<skill-dir>/scripts/wp-rest.sh whoami
+<skill-dir>/scripts/wp-rest.sh get <pages|posts> <id> <out-file>
+<skill-dir>/scripts/wp-rest.sh create <pages|posts> <title> <slug>
+<skill-dir>/scripts/wp-rest.sh update <pages|posts> <id> <content-file> <modified>
 ```
 
-`update` saves the current content to the backup dir before writing.
+`get` prints `modified`. `update` needs that value, saves the current content to the backup dir, and aborts if the page changed since your `get` or if the content file is missing or empty.
 
 ## Workflow
 
@@ -46,11 +50,11 @@ scripts/wp-rest.sh update <pages|posts> <id> <content-file>
 3. To add content, continue with the edit flow below.
 
 **Edit content**
-1. `get` the page into a scratch file. Keep that file as the original.
+1. `get` the page into a scratch file. Keep that file as the original and note the `modified` value.
 2. Produce the new content (see "Where the markup comes from").
 3. Show a diff of original vs new. Do not hide changes outside what the user asked for.
 4. Ask the user to confirm. Never call `update` before they say yes.
-5. Run `update`, then `get` again and compare to the new content. Report the id, `modified`, and the backup path.
+5. Run `update` with the `modified` value from step 1, then `get` again and compare to the new content. If `update` aborts because the page changed, run `get` again and redo the edit. Report the id, `modified`, and the backup path.
 
 If the user asks to publish, confirm that separately, then POST `{"status":"publish"}` to the same endpoint.
 

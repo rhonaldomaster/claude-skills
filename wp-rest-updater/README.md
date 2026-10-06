@@ -25,7 +25,7 @@ In wp-admin: Users > Profile > Application Passwords. Prefer a user with the Edi
 `~/.netrc` is a file in your home directory (`/Users/<you>/.netrc`), outside any repository, so credentials never reach git.
 
 ```
-machine www.example.com login your-wp-username password xxxx xxxx xxxx xxxx xxxx xxxx
+machine www.example.com login your-wp-username password xxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 If the file does not exist:
@@ -34,7 +34,7 @@ If the file does not exist:
 touch ~/.netrc && chmod 600 ~/.netrc
 ```
 
-Paste the Application Password as WordPress shows it, with the spaces. If you get a 401, try it without spaces.
+WordPress shows the Application Password in groups of four with spaces. Remove the spaces (WordPress ignores them), or wrap the whole password in double quotes. An unquoted password with spaces is cut at the first space and returns 401.
 
 ### 3. Set `WP_REST_BASE` for the project
 
@@ -44,13 +44,17 @@ Put it in the project's `.claude/settings.local.json` (not committed):
 { "env": { "WP_REST_BASE": "https://www.example.com/wp-json" } }
 ```
 
-If WordPress lives in a subpath, include it: `https://www.example.com/site/wp-json`.
+If WordPress lives in a subpath, include it: `https://www.example.com/site/wp-json`. It must start with `https://`: the script refuses anything else, because the password is sent with every request.
+
+If the variable is not visible to Claude after adding it, restart the session.
 
 ### 4. Check that auth works
 
 ```bash
-wp-rest-updater/scripts/wp-rest.sh whoami
+<path-to-this-skill>/scripts/wp-rest.sh whoami
 ```
+
+`<path-to-this-skill>` is this folder (for example `~/.claude/skills/wp-rest-updater` if you installed it with a symlink).
 
 A 200 with your user means it works. A 401 or 403 usually means a security plugin, a firewall, or the host is blocking REST authentication.
 
@@ -59,8 +63,8 @@ A 200 with your user means it works. A 401 or 403 usually means a security plugi
 Add one line per host to the same `~/.netrc`:
 
 ```
-machine www.site-one.com login user-one password xxxx xxxx xxxx xxxx xxxx xxxx
-machine www.site-two.com login user-two password yyyy yyyy yyyy yyyy yyyy yyyy
+machine www.site-one.com login user-one password xxxxxxxxxxxxxxxxxxxxxxxx
+machine www.site-two.com login user-two password yyyyyyyyyyyyyyyyyyyyyyyy
 ```
 
 Set a different `WP_REST_BASE` in each project's `.claude/settings.local.json`. curl picks the credentials that match the host of the URL.
@@ -73,12 +77,12 @@ Set a different `WP_REST_BASE` in each project's `.claude/settings.local.json`. 
 scripts/wp-rest.sh whoami
 scripts/wp-rest.sh get <pages|posts> <id> <out-file>
 scripts/wp-rest.sh create <pages|posts> <title> <slug>
-scripts/wp-rest.sh update <pages|posts> <id> <content-file>
+scripts/wp-rest.sh update <pages|posts> <id> <content-file> <modified>
 ```
 
-`create` always makes a draft. `update` saves the current content to `$WP_REST_BACKUP_DIR` (default `$TMPDIR/wp-rest-backups`) before writing.
+`create` always makes a draft. `get` prints `modified`; pass that value to `update`. `update` saves the current content to `$WP_REST_BACKUP_DIR` (default `~/.wp-rest-backups`) before writing. It aborts if the page changed since your `get`, or if the content file is missing or empty.
 
-Requires `curl` and `jq`.
+Requires curl 7.76 or later and `jq`.
 
 ## Limits
 
