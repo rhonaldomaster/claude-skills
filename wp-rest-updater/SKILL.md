@@ -1,6 +1,7 @@
 ---
 name: wp-rest-updater
 description: Create and edit WordPress pages and posts through the REST API using an Application Password, when there is no server or WP-CLI access. Handles Gutenberg content, including custom blocks. Use when the user wants to change page or post content on a remote WordPress site, create a page with a name and slug, edit block text, or add blocks, and mentions the REST API, an Application Password, or having only wp-admin access.
+effort: medium
 ---
 
 # WP REST Updater
