@@ -22,7 +22,7 @@ planning and review work.
 ```
 [1. PLAN]        /dev-workflow:plan-ticket <ID>   -> plan file
                  ✋ CP-1: plan approved
-[2. IMPLEMENT]   code -> manual QA
+[2. IMPLEMENT]   ticket -> In Progress, code -> manual QA
                  ✋ CP-2: QA approved (loop on fixes: CP-2b)
 [3. TEST]        unit/e2e if the project has them
                  ✋ CP-3: test results resolved
@@ -89,6 +89,19 @@ Do not write implementation code until the plan is approved and open questions a
 # Phase 2 — Implement
 
 Only start after CP-1 is approved.
+
+## Ticket status check
+
+Do this once, right after CP-1 is approved and before writing code.
+
+If a Jira ticket ID is known:
+1. Read its status: `jira issue view <TICKET_ID> --plain`. If the CLI is not available, use any other Jira tool the dev has configured in this session.
+2. If it is already in progress (`In Progress`, `In Development`, etc.), say so and continue.
+3. If it is not, ask: "`<TICKET_ID>` is in `<CURRENT_STATUS>`. Move it to In Progress?" Column names vary by project, so ask for the exact name if it is unclear. On approval, move it with the same Jira interface used to read the status (CLI: `jira issue move <TICKET_ID> "<TARGET_STATUS>"`).
+
+If Jira cannot be reached (no CLI, no MCP, or auth fails) and a ticket ID is known, do not fail. Remind the dev: "I could not reach Jira. Please move `<TICKET_ID>` to In Progress yourself."
+
+If there is no ticket ID, skip this step.
 
 ## Find the dev/test commands
 
@@ -223,6 +236,7 @@ with the PR link and show it for confirmation before posting.
       ✋ CP-1: plan + open questions approved
 
 [ ] PHASE 2 — IMPLEMENT
+      Ticket status check: if not in progress, ask to move it (or remind the dev if Jira is unreachable)
       Detect dev/test commands (package.json / Makefile / CLAUDE.md / ask)
       Multi-part ticket: one piece at a time, checkpoint after each
       Self-QA pass with evidence

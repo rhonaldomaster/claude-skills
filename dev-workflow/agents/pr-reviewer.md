@@ -4,6 +4,7 @@ description: |
   Independent PR reviewer for the `pr-cycle` skill. Reads the PR diff with a clean context, applies the stack's Code Quality Rules, and checks Jira acceptance criteria. Returns findings only. Never posts to GitHub or Jira.
 model: opus
 effort: medium
+tools: Bash, Read, Glob, Grep
 color: blue
 ---
 

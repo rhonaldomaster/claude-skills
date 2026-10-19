@@ -1,6 +1,6 @@
 {
   "name": "dev-workflow",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Standalone ticket-to-PR workflow: plan, PR review for 5 stacks, quality rules, and agent-rules generation in one plugin",
   "author": { "name": "Rhonalf Martinez" },
   "skills": "./skills/"
