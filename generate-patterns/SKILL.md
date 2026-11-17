@@ -81,7 +81,7 @@ After creating `PATTERNS.md`:
 
 2. **Add auto-read instruction to `CLAUDE.md`**: If the project has a `CLAUDE.md`, add this near the top (after any existing IMPORTANT notes):
    ```
-   **IMPORTANT**: At the start of each session, if `PATTERNS.md` exists in the project root, read it before implementing any feature. It contains recurring patterns that must be followed for consistency.
+   Before implementing a feature, read `PATTERNS.md` in the project root if it exists. It lists the recurring patterns to follow, so new code stays consistent.
    ```
    Adapt the parenthetical to mention the relevant pattern areas for the project's stack.
 

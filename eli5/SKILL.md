@@ -1,6 +1,6 @@
 ---
 name: ELI5
-description: keep it simple pls
+description: Use when the user asks for a very simple, short answer or status ("ELI5", "keep it simple", "my brain is fried"). Reply in small words and short sentences, covering what was done, did it work, and what comes next.
 ---
 
 It's been a long day and my brain is fried, talk to me like I'm 5.
